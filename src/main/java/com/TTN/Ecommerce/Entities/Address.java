@@ -21,11 +21,10 @@ public class Address {
     private long zipCode;
     private String label;
 
+//    @OneToOne
+//    @MapsId
+//    private Seller seller;
 
-
-    @OneToOne(mappedBy = "address",cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
-    private Seller seller;
 
 
 }

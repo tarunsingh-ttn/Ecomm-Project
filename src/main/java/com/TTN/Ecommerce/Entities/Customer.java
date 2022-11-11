@@ -9,7 +9,12 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@DiscriminatorValue("cust")
-public class Customer extends User{
+public class Customer {
+    @Id
+    private long cust_id;
     private String contact;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="user_id",referencedColumnName = "user_id")
+    private User user;
 }

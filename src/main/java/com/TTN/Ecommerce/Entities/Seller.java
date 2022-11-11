@@ -9,14 +9,21 @@ import javax.persistence.*;
 
 @Getter
 @Setter
-@DiscriminatorValue("sel")
 @Entity
-public class Seller extends User{
+public class Seller {
+    @Id
+    @GeneratedValue
+    private long seller_id;
     private String gst;
     private String companyContact;
     private String companyName;
 
-    @OneToOne
-    private Address address;
+    //    @OneToOne(mappedBy = "seller")
+//    @MapsId
+//    private User user;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
+
 
 }

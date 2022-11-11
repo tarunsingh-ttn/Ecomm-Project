@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     @Id
     @GeneratedValue
@@ -25,4 +24,11 @@ public class User {
     private boolean IS_LOCKED;
     private boolean INVALID_ATTEMPT_COUNT;
     private boolean PASSWORD_UPDATE_DATE;
+
+
+
+//    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+//    private Seller seller;
+
+
 }
