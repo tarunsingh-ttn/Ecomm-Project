@@ -12,34 +12,21 @@ import javax.persistence.*;
 @Setter
 public class Address {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private long id;
-
-    @Column(name = "City")
+    @GeneratedValue
+    private long address_id;
     private String city;
-
-    @Column(name = "State")
     private String state;
-
-    @Column(name = "Country")
     private String country;
-
-    @Column(name = "Address_Line")
     private String addressLine;
-
-    @Column(name = "Zip_Code")
     private long zipCode;
-
-    @Column(name = "Label")
     private String label;
 
-    @ManyToOne
-    @JoinColumn(name = "User_id")
-    private Customer customer;
 
-    @OneToOne
-    @JoinColumn(name = "User_id", insertable = false, updatable = false)
+
+    @OneToOne(mappedBy = "address",cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
     private Seller seller;
+
+
 }
 
