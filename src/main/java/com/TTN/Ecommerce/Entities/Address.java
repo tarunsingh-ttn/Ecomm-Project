@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 
 @Entity
@@ -21,11 +22,13 @@ public class Address {
     private long zipCode;
     private String label;
 
-//    @OneToOne
-//    @MapsId
-//    private Seller seller;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="seller_id",referencedColumnName = "seller_id")
+    private Seller seller;
 
-
+    @ManyToOne
+    @JoinColumn(name="cust_id")
+    private Customer customer;
 
 }
 

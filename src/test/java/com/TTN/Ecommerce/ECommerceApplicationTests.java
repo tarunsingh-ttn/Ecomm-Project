@@ -5,6 +5,7 @@ import com.TTN.Ecommerce.Entities.Customer;
 import com.TTN.Ecommerce.Entities.Seller;
 import com.TTN.Ecommerce.Entities.User;
 
+import com.TTN.Ecommerce.Repositories.AddressRepository;
 import com.TTN.Ecommerce.Repositories.CustomerRepository;
 import com.TTN.Ecommerce.Repositories.SellerRepository;
 import com.TTN.Ecommerce.Repositories.UserRepository;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
+import java.util.Set;
 
 @SpringBootTest
 class ECommerceApplicationTests {
@@ -26,8 +29,8 @@ class ECommerceApplicationTests {
 	@Autowired
 	SellerRepository sellerRepository;
 
-//	@Autowired
-//	AddressRepository addressRepository;
+	@Autowired
+	AddressRepository addressRepository;
 	@Test
 	void contextLoads() {
 	}
@@ -46,34 +49,49 @@ class ECommerceApplicationTests {
 		user1.setLastName("luffy");
 		cust1.setUser(user1);
 
-
-
-
-
-//		User user2=new User();
-//		Seller newSeller=new Seller();
-//		user2.setEmail("seller@420");
-//		newSeller.setGst("13");
-//		user2.setFirstName("leloch");
-//		user2.setMiddleName("d");
-//		user2.setLastName("britannia");
-//		newSeller.setCompanyName("ttn");
-//		newSeller.setCompanyContact("1234567891");
-
-//		Address sellerAddress=new Address();
-//		sellerAddress.setAddress_id(1);
-//		sellerAddress.setAddressLine("greater noida");
-//		sellerAddress.setLabel("home");
-//		sellerAddress.setCity("noida");
-//		sellerAddress.setCountry("india");
-//		sellerAddress.setZipCode(201306);
-//
-//		newSeller.setAddress(sellerAddress);
-
-//		addressRepository.save(sellerAddress);
-//		userRepository.save(newSeller);
 		customerRepository.save(cust1);
+
+		Set<Address> addresses= new HashSet<>();
+		Address homeAddress= new Address();
+		homeAddress.setAddress_id(156);
+		homeAddress.setAddressLine("laxmi nagar");
+		homeAddress.setCountry("India");
+		homeAddress.setZipCode(201306);
+		homeAddress.setState("home sate");
+		homeAddress.setCity("gaur city");
+		homeAddress.setCustomer(cust1);
+		homeAddress.setLabel("home");
+		addresses.add(homeAddress);
+		addressRepository.save(homeAddress);
+
+
+
+
+		Address officeAddress=new Address();
+		officeAddress.setCity("office city");
+		officeAddress.setCountry("dubai");
+		officeAddress.setLabel("office");
+		officeAddress.setZipCode(110086);
+		officeAddress.setState("habibi");
+		officeAddress.setAddress_id(157);
+		officeAddress.setAddressLine("hhsh");
+		officeAddress.setCustomer(cust1);
+		addressRepository.save(officeAddress);
+
+		addresses.add(officeAddress);
+
+
+		cust1.setAddresses(addresses);
+
+
+
+
+
+
+
+
 		userRepository.save(user1);
+
 
 //		userRepository.save(user2);
 
@@ -98,8 +116,26 @@ class ECommerceApplicationTests {
 
 		newSeller.setUser(user2);
 
+
+		Address sellerAddress=new Address();
+		sellerAddress.setAddress_id(1);
+		sellerAddress.setAddressLine("greater noida");
+		sellerAddress.setLabel("home");
+		sellerAddress.setCity("noida");
+		sellerAddress.setCountry("india");
+		sellerAddress.setZipCode(201306);
+		sellerAddress.setSeller(newSeller);
+
+		addressRepository.save(sellerAddress);
 		sellerRepository.save(newSeller);
 		userRepository.save(user2);
+
+
+
+	}
+
+	@Test
+	void createSellerAddress(){
 
 
 	}

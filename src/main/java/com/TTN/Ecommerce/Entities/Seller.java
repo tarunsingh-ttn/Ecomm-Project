@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 
 @Getter
@@ -24,6 +25,9 @@ public class Seller {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
+
+
+
 
 
 }
