@@ -1,14 +1,8 @@
 package com.TTN.Ecommerce;
 
-import com.TTN.Ecommerce.Entities.Address;
-import com.TTN.Ecommerce.Entities.Customer;
-import com.TTN.Ecommerce.Entities.Seller;
-import com.TTN.Ecommerce.Entities.User;
+import com.TTN.Ecommerce.Entities.*;
 
-import com.TTN.Ecommerce.Repositories.AddressRepository;
-import com.TTN.Ecommerce.Repositories.CustomerRepository;
-import com.TTN.Ecommerce.Repositories.SellerRepository;
-import com.TTN.Ecommerce.Repositories.UserRepository;
+import com.TTN.Ecommerce.Repositories.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +24,9 @@ class ECommerceApplicationTests {
 	SellerRepository sellerRepository;
 
 	@Autowired
+	RoleRepository roleRepository;
+
+	@Autowired
 	AddressRepository addressRepository;
 	@Test
 	void contextLoads() {
@@ -43,10 +40,13 @@ class ECommerceApplicationTests {
 		cust1.setContact("1234567890");
 
 		User user1=new User();
-		user1.setEmail("tarunsingh021@gmail.com");
+		user1.setEmail("tarun");
 		user1.setFirstName("Monkey");
 		user1.setMiddleName("D");
 		user1.setLastName("luffy");
+		user1.setPassword("1234");
+		Role role = roleRepository.findById(3).get();
+		user1.setRole(role);
 		cust1.setUser(user1);
 
 		customerRepository.save(cust1);
@@ -109,7 +109,8 @@ class ECommerceApplicationTests {
 		newSeller.setCompanyContact("1234567891");
 
 		User user2=new User();
-		user2.setEmail("seller@420");
+		user2.setPassword("4321");
+		user2.setEmail("seller");
 		user2.setFirstName("leloch");
 		user2.setMiddleName("d");
 		user2.setLastName("britannia");

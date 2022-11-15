@@ -12,7 +12,8 @@ import java.util.Set;
 @Setter
 public class Customer {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "customer_gen")
+    @SequenceGenerator(name="customer_gen", sequenceName = "customer_seq", initialValue = 1, allocationSize = 1)
     private long cust_id;
     private String contact;
 

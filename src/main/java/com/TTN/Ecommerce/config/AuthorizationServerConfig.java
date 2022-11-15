@@ -4,6 +4,7 @@ package com.TTN.Ecommerce.config;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.PasswordLookup;
 import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,22 +49,12 @@ import java.util.stream.Collectors;
 @Configuration(proxyBeanMethods = false)
 public class AuthorizationServerConfig  {
 
-    private static final String ROLES_CLAIM = "roles";
+
 
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @Value("${keyFile}")
-    private String keyFile;
 
-    @Value("${password}")
-    private String password;
-
-    @Value("${alias}")
-    private String alias;
-
-    @Value("${providerUrl}")
-    private String providerUrl;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -73,39 +64,39 @@ public class AuthorizationServerConfig  {
     public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         return http.userDetailsService(userDetailsService)
-                .formLogin(Customizer.withDefaults()).build();
+                .formLogin(Customizer.withDefaults())
+                .build();
 
     }
 
-    @Bean
-    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
-        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
 
-    }
 
-    @Bean
-    public JWKSource<SecurityContext> jwkSource()
-            throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
-        JWKSet jwkSet = buildJWKSet();
-        return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
 
-    }
+   @Bean
+   public JWKSource<SecurityContext> jwkSource() {
+       KeyPair keyPair = generateRsaKey();
+       RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+       RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+       RSAKey rsaKey = new RSAKey.Builder(publicKey)
+               .privateKey(privateKey)
+               .keyID(UUID.randomUUID().toString())
+               .build();
+       JWKSet jwkSet = new JWKSet(rsaKey);
+       return new ImmutableJWKSet<>(jwkSet);
+   }
 
-    private JWKSet buildJWKSet() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
-        KeyStore keyStore = KeyStore.getInstance("pkcs12");
-        try (InputStream fis = this.getClass().getClassLoader().getResourceAsStream(keyFile);) {
-            keyStore.load(fis, alias.toCharArray());
-            return JWKSet.load(keyStore, new PasswordLookup() {
-
-                @Override
-                public char[] lookupPassword(String name) {
-                    return password.toCharArray();
-                }
-            });
+    private static KeyPair generateRsaKey() {
+        KeyPair keyPair;
+        try {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(2048);
+            keyPair = keyPairGenerator.generateKeyPair();
         }
-
+        catch (Exception ex) {
+            throw new IllegalStateException(ex);
+        }
+        return keyPair;
     }
-
     @Bean
     public ProviderSettings providerSettings() {
         return ProviderSettings.builder().issuer("http://localhost:8080").build();
@@ -135,17 +126,6 @@ public class AuthorizationServerConfig  {
 
     }
 
-    @Bean
-    public OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer() {
-        return context -> {
-            if (context.getTokenType().equals(OAuth2TokenType.ACCESS_TOKEN)) {
-                Authentication principal = context.getPrincipal();
-                Set<String> authorities = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toSet());
-                context.getClaims().claim(ROLES_CLAIM, authorities);
-            }
-        };
 
-    }
 
 }

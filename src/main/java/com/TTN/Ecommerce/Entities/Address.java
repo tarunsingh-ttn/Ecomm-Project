@@ -13,7 +13,8 @@ import java.util.Set;
 @Setter
 public class Address {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "address_gen")
+    @SequenceGenerator(name = "address_gen", sequenceName = "address_seq", initialValue = 1, allocationSize = 1 )
     private long address_id;
     private String city;
     private String state;

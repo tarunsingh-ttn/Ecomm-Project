@@ -13,7 +13,8 @@ import java.util.Set;
 @Entity
 public class Seller {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seller_gen")
+    @SequenceGenerator(name="seller_gen", sequenceName = "seller_seq", initialValue = 1, allocationSize = 1)
     private long seller_id;
     private String gst;
     private String companyContact;
