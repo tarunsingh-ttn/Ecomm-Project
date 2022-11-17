@@ -22,13 +22,16 @@ public class ResourceServerConfig {
             // @formatter:off
             http
                     .authorizeHttpRequests((authorize) -> authorize
-                            .antMatchers("/user/**").permitAll()
-                                    .antMatchers("/customer/**").hasAnyRole("CUSTOMER","ADMIN")
-                                    .antMatchers("/seller/**").hasAnyRole("SELLER","ADMIN")
-                                    .antMatchers("/admin/**").hasRole("ADMIN")
+//                            .antMatchers("/user/**").permitAll()
+//                                    .antMatchers("/customer/**").hasAnyRole("CUSTOMER","ADMIN")
+//                                    .antMatchers("/seller/**").hasAnyRole("SELLER","ADMIN")
+//                                    .antMatchers("/admin/**").hasRole("ADMIN")
+
+                                    .antMatchers("/api/**").permitAll()
+
                                     .anyRequest().authenticated()
 
-                    )
+                    ).csrf().disable()
                     .oauth2ResourceServer((oauth2) -> oauth2
                             .opaqueToken((opaque) -> opaque
                                     .introspectionUri("http://localhost:8080/oauth2/introspect")

@@ -22,7 +22,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated())
+        System.out.println("hello");
+        http.authorizeRequests(authorizeRequests -> authorizeRequests
+                        .antMatchers("/api/**").permitAll()
+                        .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults());
         return http.build();
 

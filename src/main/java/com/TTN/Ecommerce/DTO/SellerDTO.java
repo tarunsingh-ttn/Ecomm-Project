@@ -9,4 +9,5 @@ public class SellerDTO extends CustomerDTO{
     private String gst;
     private String companyContact;
     private String companyName;
+    private AddressDTO address;
 }

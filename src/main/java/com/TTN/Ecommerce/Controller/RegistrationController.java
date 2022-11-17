@@ -20,20 +20,28 @@ public class RegistrationController {
     @Autowired
     RegisterService registrationService;
 
-    @PostMapping(path = "/registration", headers = "user-role=SELLER")
+
+    @GetMapping("/hello")
+    public String hello(){
+        return "hello";
+    }
+    @GetMapping(path="/users")
+    public List<User> getAllUsers(){
+        return registrationService.returnAllUsers();
+
+    }
+
+    @PostMapping(path = "/register", headers = "user-role=SELLER")
     public ResponseEntity<Seller> registerUser(@RequestBody SellerDTO sellerDTO){
         Seller seller = registrationService.createSeller(sellerDTO);
         return new ResponseEntity<Seller>(seller, HttpStatus.CREATED);
 
     }
-    @GetMapping
-    public ResponseEntity<List<User>> getUsers(){
-        return new ResponseEntity<>(registrationService.findAllCustomers(),HttpStatus.OK);
-    }
 
-    @PostMapping(path = "/registration", headers = "user-role=CUSTOMER")
+    @PostMapping(path = "/register", headers = "user-role=CUSTOMER")
     public ResponseEntity<Customer> registerUser(@RequestBody CustomerDTO customerDTO){
         Customer customer = registrationService.createCustomer(customerDTO);
         return new ResponseEntity<Customer>(customer, HttpStatus.CREATED);
     }
+
 }
