@@ -22,10 +22,11 @@ public class ResourceServerConfig {
             // @formatter:off
             http
                     .authorizeHttpRequests((authorize) -> authorize
-
-//                            .mvcMatchers(HttpMethod.GET, "/user/").hasAuthority("USER")
-//                            .mvcMatchers(HttpMethod.GET, "/admin").hasAuthority("ADMIN")
-                            .anyRequest().authenticated()
+                            .antMatchers("/user/**").permitAll()
+                                    .antMatchers("/customer/**").hasAnyRole("CUSTOMER","ADMIN")
+                                    .antMatchers("/seller/**").hasAnyRole("SELLER","ADMIN")
+                                    .antMatchers("/admin/**").hasRole("ADMIN")
+                                    .anyRequest().authenticated()
 
                     )
                     .oauth2ResourceServer((oauth2) -> oauth2

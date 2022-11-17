@@ -27,10 +27,31 @@ public class User {
     private boolean INVALID_ATTEMPT_COUNT;
     private boolean PASSWORD_UPDATE_DATE;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "user_id=" + user_id +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", password='" + password + '\'' +
+                ", IS_DELETED=" + IS_DELETED +
+                ", IS_ACTIVE=" + IS_ACTIVE +
+                ", IS_EXPIRED=" + IS_EXPIRED +
+                ", IS_LOCKED=" + IS_LOCKED +
+                ", INVALID_ATTEMPT_COUNT=" + INVALID_ATTEMPT_COUNT +
+                ", PASSWORD_UPDATE_DATE=" + PASSWORD_UPDATE_DATE +
+                ", role=" + role +
+                '}';
+    }
+
     @OneToOne
     @JoinTable(name = "user_role",
             joinColumns ={@JoinColumn(name="user_id", referencedColumnName = "user_id")},
             inverseJoinColumns = {@JoinColumn(name="role_id", referencedColumnName = "role_id")})
+
+
     private Role role;
 
 

@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.core.Authentication;
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
 
 
 @Configuration(proxyBeanMethods = false)
+
 public class AuthorizationServerConfig  {
 
 
@@ -65,6 +67,7 @@ public class AuthorizationServerConfig  {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         return http.userDetailsService(userDetailsService)
                 .formLogin(Customizer.withDefaults())
+
                 .build();
 
     }
@@ -111,7 +114,8 @@ public class AuthorizationServerConfig  {
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("https://oidcdebugger.com/debug")
+                .redirectUri("http://localhost:8080/code")
+
                 .scope("read").scope("write")
                 .tokenSettings(tokenSettings())
                 .build();
