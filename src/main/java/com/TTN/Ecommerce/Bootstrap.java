@@ -34,15 +34,15 @@ public class Bootstrap implements ApplicationRunner {
         if(roleRepository.count()<1){
             Role role1 = new Role();
             role1.setRole_id(1);
-            role1.setAuthority("ROLE_ADMIN");
+            role1.setAuthority("ADMIN");
 
             Role role2 = new Role();
             role2.setRole_id(2);
-            role2.setAuthority("ROLE_SELLER");
+            role2.setAuthority("SELLER");
 
             Role role3 = new Role();
             role3.setRole_id(3);
-            role3.setAuthority("ROLE_CUSTOMER");
+            role3.setAuthority("CUSTOMER");
 
             roleRepository.save(role1);
             roleRepository.save(role2);

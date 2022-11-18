@@ -1,14 +1,19 @@
 package com.TTN.Ecommerce.Controller;
 
 
+import com.TTN.Ecommerce.DTO.LoginRequest;
 import com.TTN.Ecommerce.Entities.User;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.TTN.Ecommerce.Services.LogoutService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,39 +21,57 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class loginController {
 
-    @GetMapping("/customer")
 
+    @Autowired
+    LogoutService authenticationService;
+
+    @GetMapping("/customer")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     public String home(){
         return "hello customer";
     }
 
 
     @GetMapping("/admin")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String adminHome(){
         return "Admin home";
     }
-    @GetMapping("/user")
+    @GetMapping("/seller")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public String userHome(){
-        return "User home";
+        return "seller home";
     }
 
-    @GetMapping("/code")
-    public String authCode(){return "Authorized";}
 
-   /* @GetMapping("/login")
-    public ResponseEntity<String> authenticateUser(@RequestBody){
-        return new ResponseEntity<>("user authenticated", HttpStatus.OK);
-    }*/
 
-    @PostMapping(value="/api/user/logout")
-    public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth != null){
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
+   @PostMapping("/api/login")
+   public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 
-        return "User logged out";
+       RestTemplate restTemplate = new RestTemplate();
+
+       HttpHeaders headers = new HttpHeaders();
+
+       headers.setBasicAuth("client", "secret");
+       headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+       MultiValueMap<String, String> valueMap = new LinkedMultiValueMap<>();
+       valueMap.add("grant_type", "password");
+       valueMap.add("username", "user name");
+       valueMap.add("password", "user password");
+
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(valueMap, headers);
+
+       return restTemplate.postForEntity("http://localhost:8080/oauth/token",
+               requestEntity, Object.class);
+
+   }
+    @PostMapping(path="/api/logout")
+    public ResponseEntity<String> userLogout(HttpServletRequest request){
+        String response= authenticationService.userSignOut(request);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+
     }
 
 

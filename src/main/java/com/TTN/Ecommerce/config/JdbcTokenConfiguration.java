@@ -1,4 +1,4 @@
-/*
+
 package com.TTN.Ecommerce.config;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -38,4 +38,4 @@ public class JdbcTokenConfiguration {
     public TokenStore tokenStore() {
         return new JdbcTokenStore(dataSource());
     }
-}*/
+}
