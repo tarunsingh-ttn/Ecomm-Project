@@ -1,11 +1,14 @@
 package com.TTN.Ecommerce.Entities;
 
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
+@Data
 public class VerificationToken {
 
     @Id
@@ -14,7 +17,7 @@ public class VerificationToken {
     private long tokenid;
 
     @Column(name="confirmation_token")
-    private String confirmationToken;
+    private String verificationToken;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
@@ -26,8 +29,10 @@ public class VerificationToken {
     public VerificationToken(User user) {
         this.user = user;
         createdDate = new Date();
-        confirmationToken = UUID.randomUUID().toString();
+        verificationToken = UUID.randomUUID().toString();
     }
 
-    // getters and setters
+    public VerificationToken() {
+
+    }
 }

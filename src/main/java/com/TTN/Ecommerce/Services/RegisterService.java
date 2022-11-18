@@ -5,6 +5,7 @@ import com.TTN.Ecommerce.DTO.SellerDTO;
 import com.TTN.Ecommerce.Entities.*;
 import com.TTN.Ecommerce.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 
@@ -27,7 +28,17 @@ public class RegisterService {
 
     @Autowired
     CustomerRepository customerRepository;
+    @Autowired
+    VerificationTokenRepository verificationTokenRepository;
 
+    @Autowired
+    private EmailSenderService emailSenderService;
+
+
+
+    public void sendEmail(){
+
+    }
     public Seller createSeller(SellerDTO sellerDTO) {
         User user = new User();
         user.setFirstName(sellerDTO.getFirstName());
@@ -60,7 +71,17 @@ public class RegisterService {
 
         sellerRepository.save(seller);
         userRepository.save(user);
+        VerificationToken verificationToken=new VerificationToken(user);
+        verificationTokenRepository.save(verificationToken);
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setSubject("Complete Registration!");
+        mailMessage.setFrom("chand312902@gmail.com");
+        mailMessage.setText("To confirm your account, please click here : "
+                +"http://localhost:8080/confirm-account?token="+verificationToken.getVerificationToken());
 
+        emailSenderService.sendEmail(mailMessage);
+        System.out.println("email sent");
         return seller;
     }
 
@@ -106,4 +127,6 @@ public class RegisterService {
         List<User> users = (List<User>) userRepository.findAll();
         return users;
     }
+
+
 }
