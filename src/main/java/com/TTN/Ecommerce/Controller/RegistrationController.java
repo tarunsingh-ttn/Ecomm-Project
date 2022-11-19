@@ -6,6 +6,7 @@ import com.TTN.Ecommerce.Entities.Customer;
 import com.TTN.Ecommerce.Entities.Seller;
 import com.TTN.Ecommerce.Entities.User;
 import com.TTN.Ecommerce.Entities.VerificationToken;
+import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Repositories.UserRepository;
 import com.TTN.Ecommerce.Repositories.VerificationTokenRepository;
 import com.TTN.Ecommerce.Services.RegisterService;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class RegistrationController {
 
     @Autowired
@@ -28,25 +29,16 @@ public class RegistrationController {
     @Autowired
     VerificationTokenRepository verificationTokenRepository ;
 
-    @GetMapping("/hello")
-    public String hello(){
-        return "hello";
-    }
-    @GetMapping(path="/users")
-    public List<User> getAllUsers(){
-        return registrationService.returnAllUsers();
-
-    }
 
     @PostMapping(path = "/register", headers = "user-role=SELLER")
-    public ResponseEntity<Seller> registerUser(@RequestBody SellerDTO sellerDTO){
+    public ResponseEntity<Seller> registerUser(@RequestBody SellerDTO sellerDTO) throws EcommerceException {
         Seller seller = registrationService.createSeller(sellerDTO);
         return new ResponseEntity<Seller>(seller, HttpStatus.CREATED);
 
     }
 
     @PostMapping(path = "/register", headers = "user-role=CUSTOMER")
-    public ResponseEntity<Customer> registerUser(@RequestBody CustomerDTO customerDTO){
+    public ResponseEntity<Customer> registerUser(@RequestBody CustomerDTO customerDTO) throws EcommerceException {
         Customer customer = registrationService.createCustomer(customerDTO);
         return new ResponseEntity<Customer>(customer, HttpStatus.CREATED);
     }

@@ -20,8 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 public class loginController {
-
-
     @Autowired
     LogoutService authenticationService;
 
@@ -30,7 +28,6 @@ public class loginController {
     public String home(){
         return "hello customer";
     }
-
 
     @GetMapping("/admin")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -43,10 +40,7 @@ public class loginController {
         return "seller home";
     }
 
-
-
-
-   @PostMapping("/api/login")
+    @PostMapping("/api/user/login")
    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 
        RestTemplate restTemplate = new RestTemplate();
@@ -58,8 +52,8 @@ public class loginController {
 
        MultiValueMap<String, String> valueMap = new LinkedMultiValueMap<>();
        valueMap.add("grant_type", "password");
-       valueMap.add("username", "user name");
-       valueMap.add("password", "user password");
+       valueMap.add("username", loginRequest.getUsername());
+       valueMap.add("password", loginRequest.getPassword());
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(valueMap, headers);
 

@@ -1,15 +1,13 @@
+/*
 package com.TTN.Ecommerce.Entities;
-
-
 import lombok.Data;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
 @Data
-public class VerificationToken {
+public class ForgetPasswordToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,25 +15,25 @@ public class VerificationToken {
     private long tokenid;
 
     @Column(name="confirmation_token")
-    private String verificationToken;
-
+    private String forgetPasswordtoken;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
-
-    
 
     @OneToOne
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
-    public VerificationToken(User user) {
+
+
+
+    public ForgetPasswordToken(User user) {
         this.user = user;
         createdDate = new Date();
-        verificationToken = UUID.randomUUID().toString();
+        forgetPasswordtoken = UUID.randomUUID().toString();
     }
 
-    public VerificationToken() {
+    public  ForgetPasswordToken() {
 
     }
-}
+}*/
