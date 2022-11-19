@@ -44,23 +44,6 @@ public class RegistrationController {
     }
 
 
-   /* @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
-    public ResponseEntity<String > confirmUserAccount(@RequestParam("token")String confirmationToken)
-    {
-        VerificationToken token = verificationTokenRepository.findByVerificationToken(confirmationToken);
-        System.out.println(token);
-        if(token != null)
-        {
-            User user = userRepository.findByEmail(token.getUser().getEmail());
-            user.setIS_ACTIVE(true);
-            userRepository.save(user);
-            System.out.println("verified");
-            return new ResponseEntity<>("verification successful",HttpStatus.OK) ;
-        }
-        else
-        {
-            return new ResponseEntity<>("unsuccessful",HttpStatus.OK) ;
-        }
-    }*/
+
 
 }

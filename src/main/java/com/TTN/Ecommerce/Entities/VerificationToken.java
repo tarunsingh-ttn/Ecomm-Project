@@ -22,7 +22,7 @@ public class VerificationToken {
     @Column(name="confirmation_token")
     private String verificationToken;
     @Transient
-    private int expiryTimeInMinutes=1;
+    private int expiryTimeInMinutes=5;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 

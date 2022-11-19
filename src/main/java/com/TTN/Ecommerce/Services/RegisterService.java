@@ -16,24 +16,26 @@ import java.util.List;
 public class RegisterService {
 
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    AddressRepository addressRepository;
+    private AddressRepository addressRepository;
 
     @Autowired
-    SellerRepository sellerRepository;
+    private SellerRepository sellerRepository;
 
     @Autowired
-    CustomerRepository customerRepository;
-    @Autowired
-    VerificationTokenRepository verificationTokenRepository;
+    private CustomerRepository customerRepository;
+
+
+
 
     @Autowired
-    private EmailSenderService emailSenderService;
+    private VerificationTokenService verificationTokenService;
+
 
     public Seller createSeller(SellerDTO sellerDTO) throws EcommerceException {
 
@@ -70,23 +72,11 @@ public class RegisterService {
         addressRepository.save(address);
         sellerRepository.save(seller);
         userRepository.save(user);
-        createVerificationToken(user);
+        verificationTokenService.createVerificationToken(user);
         return seller;
     }
 
-    public void createVerificationToken(User user){
-        VerificationToken verificationToken=new VerificationToken(user);
-        verificationTokenRepository.save(verificationToken);
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setSubject("Complete Registration!");
-        mailMessage.setFrom("tarunTTN@gmail.com");
-        mailMessage.setText("To confirm your account, please click here : "
-                +"http://localhost:8080/api/user/confirm-account?token="+verificationToken.getVerificationToken());
 
-        emailSenderService.sendEmail(mailMessage);
-
-    }
     public Customer createCustomer(CustomerDTO customerDTO) throws EcommerceException {
 
         if( userRepository.findByEmail(customerDTO.getEmail()) !=null) {
@@ -124,7 +114,7 @@ public class RegisterService {
 
         customerRepository.save(customer);
         userRepository.save(user);
-        createVerificationToken(user);
+        verificationTokenService.createVerificationToken(user);
 
         return customer;
     }

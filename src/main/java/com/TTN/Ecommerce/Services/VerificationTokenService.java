@@ -9,6 +9,7 @@ import com.TTN.Ecommerce.Repositories.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -17,35 +18,72 @@ import java.util.Calendar;
 public class VerificationTokenService {
 
     @Autowired
-    VerificationTokenRepository verificationTokenRepository;
+    private VerificationTokenRepository verificationTokenRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+
 
     @Autowired
-    RegisterService registerService;
+    private EmailSenderService emailSenderService;
+
+    public void createVerificationToken(User user){
+
+
+         VerificationToken token=verificationTokenRepository.findByUser(user);
+         if(token!=null){
+             verificationTokenRepository.delete(token);
+         }
+        VerificationToken verificationToken=new VerificationToken(user);
+        verificationTokenRepository.save(verificationToken);
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setSubject("Complete Registration!");
+        mailMessage.setFrom("tarunTTN@gmail.com");
+        mailMessage.setText("To confirm your account, please click here : "
+                +"http://localhost:8080/api/user/confirm-account?token="+verificationToken.getVerificationToken());
+
+        emailSenderService.sendEmail(mailMessage);
+
+    }
 
     public String verifyToken(String confirmationToken) {
         VerificationToken token = verificationTokenRepository.findByVerificationToken(confirmationToken);
 
         if(token==null){
-//            throw new EcommerceException("Service.INVALID_TOKEN");
             return "invalid token";
         }else{
-            Calendar calendar = Calendar.getInstance();
-            if(token.getExpiryDate().getTime()-calendar.getTime().getTime()<=0 ){
-                User newUser=token.getUser();
-                verificationTokenRepository.delete(token);
+            User user = token.getUser();
 
-                registerService.createVerificationToken(newUser);
+            Calendar calendar = Calendar.getInstance();
+
+            if(token.getExpiryDate().getTime()-calendar.getTime().getTime()<=0 ){
+                verificationTokenRepository.delete(token);
+                createVerificationToken(user);
                 return "token expired, new token is sent to ur email id ";
             }
-            User user = userRepository.findByEmail(token.getUser().getEmail());
+
             user.setIS_ACTIVE(true);
             userRepository.save(user);
             verificationTokenRepository.delete(token);
             return "verification successful";
         }
 
+    }
+
+    public String reCreateToken(String email) throws EcommerceException {
+        User newUser=userRepository.findByEmail("tarunsingh021@gmail.com");
+
+
+         if(newUser==null)
+             throw new EcommerceException("Service.USER_NOT_FOUND");
+        else {
+             if(newUser.isIS_ACTIVE()==true){
+                 return "Service.USER_ACCOUNT_ALREADY_ACTIVATED";
+             }
+            createVerificationToken(newUser);
+         }
+        return "New Token Sent";
     }
 }
