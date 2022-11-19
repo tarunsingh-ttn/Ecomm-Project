@@ -4,6 +4,9 @@ package com.TTN.Ecommerce.Entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -18,13 +21,20 @@ public class VerificationToken {
 
     @Column(name="confirmation_token")
     private String verificationToken;
-
-
+    @Transient
+    private int expiryTimeInMinutes=1;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expiryDate;
 
+    private Date calculateExpiryDate(int expiryTimeInMinutes)
+    {   Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Timestamp(calendar.getTime().getTime()));
+        calendar.add(Calendar.MINUTE, expiryTimeInMinutes);
+        return new Date(calendar.getTime().getTime());
+    }
     @OneToOne
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
@@ -33,6 +43,7 @@ public class VerificationToken {
         this.user = user;
         createdDate = new Date();
         verificationToken = UUID.randomUUID().toString();
+        expiryDate= calculateExpiryDate(expiryTimeInMinutes);
     }
 
     public VerificationToken() {

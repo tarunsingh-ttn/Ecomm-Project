@@ -44,7 +44,7 @@ public class RegistrationController {
     }
 
 
-    @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
+   /* @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<String > confirmUserAccount(@RequestParam("token")String confirmationToken)
     {
         VerificationToken token = verificationTokenRepository.findByVerificationToken(confirmationToken);
@@ -61,8 +61,6 @@ public class RegistrationController {
         {
             return new ResponseEntity<>("unsuccessful",HttpStatus.OK) ;
         }
-
-
-    }
+    }*/
 
 }
