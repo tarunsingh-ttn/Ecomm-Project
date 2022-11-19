@@ -34,14 +34,17 @@ public class VerificationTokenService {
         }else{
             Calendar calendar = Calendar.getInstance();
             if(token.getExpiryDate().getTime()-calendar.getTime().getTime()<=0 ){
-                registerService.createVerificationToken(token.getUser());
-                return "token expired, new token is sent to ur email id senpai";
+                User newUser=token.getUser();
+                verificationTokenRepository.delete(token);
+
+                registerService.createVerificationToken(newUser);
+                return "token expired, new token is sent to ur email id ";
             }
             User user = userRepository.findByEmail(token.getUser().getEmail());
             user.setIS_ACTIVE(true);
             userRepository.save(user);
             verificationTokenRepository.delete(token);
-            return "verifiaction successful";
+            return "verification successful";
         }
 
     }
