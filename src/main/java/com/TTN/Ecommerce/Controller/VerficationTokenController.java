@@ -1,6 +1,8 @@
 package com.TTN.Ecommerce.Controller;
 
 
+import com.TTN.Ecommerce.DTO.EmailDTO;
+import com.TTN.Ecommerce.Entities.User;
 import com.TTN.Ecommerce.Entities.VerificationToken;
 import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Repositories.UserRepository;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -31,9 +35,9 @@ public class VerficationTokenController {
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
     @PostMapping(value="/user/resend_token")
-    public ResponseEntity<String> regenerateToken(@RequestBody String email) throws EcommerceException{
+    public ResponseEntity<String> regenerateToken(@RequestBody @Valid EmailDTO emailDTO) throws EcommerceException{
 
-        String message=verificationTokenService.reCreateToken(email);
+        String message=verificationTokenService.reCreateToken(emailDTO.getEmail());
         return new ResponseEntity<>(message,HttpStatus.CREATED);
     }
 

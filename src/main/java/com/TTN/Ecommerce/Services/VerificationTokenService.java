@@ -71,17 +71,12 @@ public class VerificationTokenService {
         }
 
     }
-
     public String reCreateToken(String email) throws EcommerceException {
-        User newUser=userRepository.findByEmail("tarunsingh021@gmail.com");
-
-
-         if(newUser==null)
+        User newUser=userRepository.findByEmail(email);
+//        User newUser=userRepository.findByEmail("tarunsingh021@gmail.com");
+        if(newUser==null)
              throw new EcommerceException("Service.USER_NOT_FOUND");
         else {
-             if(newUser.isIS_ACTIVE()==true){
-                 return "Service.USER_ACCOUNT_ALREADY_ACTIVATED";
-             }
             createVerificationToken(newUser);
          }
         return "New Token Sent";

@@ -55,7 +55,7 @@ public class Bootstrap implements ApplicationRunner {
             user.setFirstName("Super");
             user.setLastName("User");
             user.setEmail("admin");
-            user.setPassword("admin");
+            user.setPassword(passwordEncoder.encode("admin"));
             Role role = roleRepository.findById(1).get();
             user.setRole(role);
             userRepository.save(user);

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 
 @Entity
@@ -24,8 +25,8 @@ public class User {
     private boolean IS_ACTIVE;
     private boolean IS_EXPIRED;
     private boolean IS_LOCKED;
-    private boolean INVALID_ATTEMPT_COUNT;
-    private boolean PASSWORD_UPDATE_DATE;
+    private int INVALID_ATTEMPT_COUNT;
+    private Date PASSWORD_UPDATE_DATE;
 
     @Override
     public String toString() {

@@ -38,4 +38,6 @@ public class JdbcTokenConfiguration {
     public TokenStore tokenStore() {
         return new JdbcTokenStore(dataSource());
     }
+
+
 }

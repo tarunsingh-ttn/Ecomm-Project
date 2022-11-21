@@ -7,6 +7,7 @@ import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -15,6 +16,8 @@ import java.util.List;
 @Service
 public class RegisterService {
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private RoleRepository roleRepository;
 
@@ -30,11 +33,10 @@ public class RegisterService {
     @Autowired
     private CustomerRepository customerRepository;
 
-
-
-
     @Autowired
     private VerificationTokenService verificationTokenService;
+
+
 
 
     public Seller createSeller(SellerDTO sellerDTO) throws EcommerceException {
@@ -48,7 +50,7 @@ public class RegisterService {
         user.setLastName(sellerDTO.getLastName());
         user.setMiddleName(sellerDTO.getMiddleName());
         user.setEmail(sellerDTO.getEmail());
-        user.setPassword(sellerDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(sellerDTO.getPassword()));
 
         Role role = roleRepository.findRoleByAuthority("SELLER");
         user.setRole(role);
