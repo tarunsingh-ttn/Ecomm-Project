@@ -7,6 +7,7 @@ import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Repositories.CustomerRepository;
 import com.TTN.Ecommerce.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
@@ -24,16 +25,19 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    public List<CustomerResponse> getAllCustomers(){
-        List<Customer> customerList=customerRepository.findAll();
-        List<CustomerResponse> customerResponsesList=new ArrayList<>();
-        customerList.forEach((customer)->{
-            CustomerResponse customerResponse=new CustomerResponse();
+    public List<CustomerResponse> getAllCustomers() throws EcommerceException {
+        List<Customer> customerList = customerRepository.findAll();
+        if(customerList.isEmpty()){
+            throw new EcommerceException("Service.CUSTOMER_NOT_FOUND",HttpStatus.NOT_FOUND);
+        }
+        List<CustomerResponse> customerResponsesList = new ArrayList<>();
+        customerList.forEach((customer) -> {
+            CustomerResponse customerResponse = new CustomerResponse();
             customerResponse.setContact(customer.getContact());
-            User customerUser=customer.getUser();
+            User customerUser = customer.getUser();
             customerResponse.setUser_id(customerUser.getUser_id());
             customerResponse.setEmail(customerUser.getEmail());
-            customerResponse.setFullName(customerUser.getFirstName()+ " " +customerUser.getMiddleName()+ " "+customerUser.getLastName());
+            customerResponse.setFullName(customerUser.getFirstName() + " " + customerUser.getMiddleName() + " " + customerUser.getLastName());
             customerResponsesList.add(customerResponse);
         });
 
@@ -42,9 +46,10 @@ public class CustomerService {
 
     public String activateUser(Long userId) throws EcommerceException {
 
-        User user=userRepository.findById(userId).get();
-        if(user==null){
-            throw new EcommerceException("user does not exist");
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new EcommerceException("Service.USER_NOT_FOUND", HttpStatus.BAD_REQUEST));
+        if(user.isIS_ACTIVE()){
+            return "User is already active";
         }
         user.setIS_ACTIVE(true);
         userRepository.save(user);
@@ -59,9 +64,9 @@ public class CustomerService {
     }
 
     public String deactivateUser(Long userId) throws EcommerceException {
-        User user=userRepository.findById(userId).get();
-        if(user==null){
-            throw new EcommerceException("user does not exist");
+        User user = userRepository.findById(userId).orElseThrow(() -> new EcommerceException("Service.USER_NOT_FOUND", HttpStatus.NOT_FOUND));
+        if(!user.isIS_ACTIVE()){
+            return "User is already de-activated";
         }
         user.setIS_ACTIVE(false);
         userRepository.save(user);

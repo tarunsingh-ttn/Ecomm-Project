@@ -3,6 +3,8 @@ package com.TTN.Ecommerce.Controller;
 
 import com.TTN.Ecommerce.DTO.LoginRequest;
 import com.TTN.Ecommerce.Entities.User;
+import com.TTN.Ecommerce.Exception.EcommerceException;
+import com.TTN.Ecommerce.Repositories.UserRepository;
 import com.TTN.Ecommerce.Services.LogoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -23,6 +25,9 @@ public class loginController {
     @Autowired
     LogoutService authenticationService;
 
+    @Autowired
+    UserRepository userRepository;
+
     @GetMapping("/customer")
     @PreAuthorize("hasAuthority('CUSTOMER')")
     public String home(){
@@ -41,7 +46,7 @@ public class loginController {
     }
 
     @PostMapping("/api/user/login")
-   public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+   public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws EcommerceException {
 
        RestTemplate restTemplate = new RestTemplate();
 
@@ -49,6 +54,9 @@ public class loginController {
 
        headers.setBasicAuth("client", "secret");
        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+      if(!userRepository.findByEmail(loginRequest.getUsername()).isIS_ACTIVE()){
+          throw new EcommerceException("Activate first dude");
+      }
 
        MultiValueMap<String, String> valueMap = new LinkedMultiValueMap<>();
        valueMap.add("grant_type", "password");

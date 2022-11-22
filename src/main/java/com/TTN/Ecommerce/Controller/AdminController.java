@@ -29,13 +29,13 @@ public class AdminController {
     private SellerService sellerService;
 
     @GetMapping("/user/all_seller")
-    public ResponseEntity<List<SellerResponse>> retrieveAllSellers(){
+    public ResponseEntity<List<SellerResponse>> retrieveAllSellers() throws EcommerceException {
         List<SellerResponse> customers =sellerService.getAllSellers();
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
 
     @GetMapping("/user/all_users")
-    public ResponseEntity<List<CustomerResponse>> retrieveAllCustomers(){
+    public ResponseEntity<List<CustomerResponse>> retrieveAllCustomers() throws EcommerceException {
         List<CustomerResponse> customers =customerService.getAllCustomers();
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
@@ -52,6 +52,7 @@ public class AdminController {
         String response=customerService.deactivateUser(userId);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
 
 
 }

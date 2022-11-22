@@ -1,20 +1,21 @@
 package com.TTN.Ecommerce.DAO;
 
 
+
+
 import com.TTN.Ecommerce.DTO.AddressDTO;
 import com.TTN.Ecommerce.Entities.Address;
 import lombok.Data;
 
 @Data
-public class SellerResponse {
-
-
-    private long user_id;
-    private String fullName;
-    private String email;
-    private String gst;
+public class SellerProfile {
+    private long userId;
+    private String firstName;
+    private String lastName;
+    private boolean isActive;
     private String companyContact;
     private String companyName;
-    private boolean IS_ACTIVE;
+    private String gst;
     private Address address;
+
 }

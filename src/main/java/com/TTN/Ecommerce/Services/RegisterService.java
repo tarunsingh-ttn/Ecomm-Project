@@ -6,6 +6,7 @@ import com.TTN.Ecommerce.Entities.*;
 import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class RegisterService {
 
 
         if( userRepository.findByEmail(sellerDTO.getEmail()) !=null) {
-            throw new EcommerceException("Service.SELLER_ALREADY_EXISTS");
+            throw new EcommerceException("Service.SELLER_ALREADY_EXISTS", HttpStatus.CONFLICT);
         }
         User user = new User();
         user.setFirstName(sellerDTO.getFirstName());
@@ -82,7 +83,7 @@ public class RegisterService {
     public Customer createCustomer(CustomerDTO customerDTO) throws EcommerceException {
 
         if( userRepository.findByEmail(customerDTO.getEmail()) !=null) {
-            throw new EcommerceException("Service.CUSTOMER_ALREADY_EXISTS");
+            throw new EcommerceException("Service.CUSTOMER_ALREADY_EXISTS",HttpStatus.CONFLICT);
         }
         User user = new User();
         user.setFirstName(customerDTO.getFirstName());

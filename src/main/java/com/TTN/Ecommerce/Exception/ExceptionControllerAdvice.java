@@ -18,7 +18,7 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler(EcommerceException.class)
     public ResponseEntity<String> ecommerceExceptionHandler(EcommerceException exception){
-        return new ResponseEntity<>(environment.getProperty(exception.getMessage()), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(environment.getProperty(exception.getMessage()),exception.getStatus() );
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> exceptionHandler(MethodArgumentNotValidException exception) {
@@ -30,5 +30,6 @@ public class ExceptionControllerAdvice {
 
         return new ResponseEntity<>(errorMsg, HttpStatus.BAD_REQUEST);
     }
+
 
 }

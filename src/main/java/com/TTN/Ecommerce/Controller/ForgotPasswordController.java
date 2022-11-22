@@ -33,7 +33,7 @@ public class ForgotPasswordController {
 
     @PostMapping("/user/confirm_reset_password")
     public ResponseEntity<String> forgetPassowordToken(@RequestParam("token") String confirmationToken ,
-                                                       @RequestBody @Valid PasswordDTO passwordDTO){
+                                                       @RequestBody @Valid PasswordDTO passwordDTO) throws EcommerceException {
         String message=forgotPasswordService.confirmToken(confirmationToken,passwordDTO);
         return new ResponseEntity<>(message,HttpStatus.CREATED);
     }

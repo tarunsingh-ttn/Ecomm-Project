@@ -8,6 +8,7 @@ import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Repositories.UserRepository;
 import com.TTN.Ecommerce.Repositories.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -38,10 +39,10 @@ public class ForgotPasswordService {
 
         }
 
-    public String confirmToken(String confirmationToken, PasswordDTO passwordDTO) {
+    public String confirmToken(String confirmationToken, PasswordDTO passwordDTO) throws EcommerceException {
         VerificationToken token = verificationTokenRepository.findByVerificationToken(confirmationToken);
         if (token == null) {
-            return "invalid token, password is not updated";
+            throw new EcommerceException("Invalid token", HttpStatus.NOT_FOUND);
         } else {
             Calendar calendar = Calendar.getInstance();
             if (token.getExpiryDate().getTime() - calendar.getTime().getTime() <= 0) {
