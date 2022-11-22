@@ -1,6 +1,7 @@
 package com.TTN.Ecommerce.Entities;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,9 @@ public class Seller {
     private String companyContact;
     private String companyName;
 
+
+
+
     //    @OneToOne(mappedBy = "seller")
 //    @MapsId
 //    private User user;
@@ -27,7 +31,9 @@ public class Seller {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
-
+    @OneToOne(mappedBy = "seller",cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Address address;
 
 
 

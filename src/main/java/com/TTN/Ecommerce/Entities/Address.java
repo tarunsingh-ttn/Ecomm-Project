@@ -1,6 +1,7 @@
 package com.TTN.Ecommerce.Entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +25,8 @@ public class Address {
     private String label;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="seller_id",referencedColumnName = "seller_id")
+    @JoinColumn(name="seller_id")
+    @JsonBackReference
     private Seller seller;
 
     @ManyToOne
