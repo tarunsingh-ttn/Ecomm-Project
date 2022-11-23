@@ -35,16 +35,13 @@ public class VerificationTokenService {
          if(token!=null){
              verificationTokenRepository.delete(token);
          }
+
         VerificationToken verificationToken=new VerificationToken(user);
         verificationTokenRepository.save(verificationToken);
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setSubject("Complete Registration!");
-        mailMessage.setFrom("tarunTTN@gmail.com");
-        mailMessage.setText("To confirm your account, please click here : "
-                +"http://localhost:8080/api/user/confirm-account?token="+verificationToken.getVerificationToken());
+        String text="To confirm your account, please click here : "
+                +"http://localhost:8080/api/user/confirm-account?token="+verificationToken.getVerificationToken();
+        emailSenderService.sendEmail(user,"Complete Registration",text);
 
-        emailSenderService.sendEmail(mailMessage);
 
     }
 

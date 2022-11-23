@@ -1,6 +1,7 @@
 package com.TTN.Ecommerce.Entities;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,7 @@ public class Customer {
     private User user;
 
     @OneToMany(mappedBy ="customer")
+    @JsonManagedReference
     private Set<Address> addresses;
 
 

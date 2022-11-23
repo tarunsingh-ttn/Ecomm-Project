@@ -3,6 +3,8 @@ package com.TTN.Ecommerce.Services;
 
 import com.TTN.Ecommerce.DAO.SellerProfile;
 import com.TTN.Ecommerce.DAO.SellerResponse;
+import com.TTN.Ecommerce.DTO.PasswordDTO;
+import com.TTN.Ecommerce.DTO.UpdatePassword;
 import com.TTN.Ecommerce.Entities.Address;
 import com.TTN.Ecommerce.Entities.Seller;
 import com.TTN.Ecommerce.Entities.User;
@@ -15,6 +17,8 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
@@ -27,8 +31,16 @@ public class SellerService {
     @Autowired
     private SellerRepository sellerRepository;
 
+
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EmailSenderService emailSenderService;
 
     public List<SellerResponse> getAllSellers() throws EcommerceException {
         List<Seller> sellerList=sellerRepository.findAll();
@@ -113,4 +125,54 @@ public class SellerService {
         return "success";
 
     }
+
+    public String updatePassword(String email, UpdatePassword updatePassword) throws EcommerceException {
+        User user=userRepository.findByEmail(email);
+        if(!updatePassword.getPassword().equals(updatePassword.getConfirmPassword())){
+            return "Password do not match";
+        }
+        user.setPassword(passwordEncoder.encode(updatePassword.getPassword()));
+        userRepository.save(user);
+
+        emailSenderService.sendEmail(user,"password has been changed","Hi passowrd for this account has been changed");
+
+        return "Password updated successfully";
+    }
+/*    public String updateProfile(String email,Map<String,Object> fields) throws EcommerceException {
+        User user=userRepository.findByEmail(email);
+        SellerProfile sellerProfile=new SellerProfile();
+        if(user==null){
+            throw new EcommerceException("User Not Found",HttpStatus.NOT_FOUND);
+        }
+
+        Seller seller=sellerRepository.findByUser(user);
+        if(seller==null){
+            throw new EcommerceException("Seller not Found",HttpStatus.NOT_FOUND);
+        }
+        sellerProfile.setActive(user.isIS_ACTIVE());
+        sellerProfile.setLastName(user.getLastName());
+        sellerProfile.setFirstName(user.getFirstName());
+        sellerProfile.setCompanyContact(seller.getCompanyContact());
+        sellerProfile.setUserId(user.getUser_id());
+        sellerProfile.setCompanyName(seller.getCompanyName());
+        sellerProfile.setGst(seller.getGst());
+        sellerProfile.setAddress(seller.getAddress());
+        fields.forEach((keys,value)->{
+            Field field=ReflectionUtils.findField(SellerProfile.class,(String) keys);
+            field.setAccessible(true);
+            ReflectionUtils.setField(field,sellerProfile,value);
+        });
+        user.setFirstName(sellerProfile.getFirstName());
+        user.setLastName(sellerProfile.getLastName());
+        seller.setAddress(sellerProfile.getAddress());
+        seller.setCompanyName(sellerProfile.getCompanyName());
+        seller.setGst(sellerProfile.getGst());
+        userRepository.save(user);
+        sellerRepository.save(seller);
+        System.out.println(user);
+
+        return "success";
+    }*/
+
+
 }

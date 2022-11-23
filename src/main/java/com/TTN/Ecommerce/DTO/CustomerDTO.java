@@ -1,6 +1,7 @@
 package com.TTN.Ecommerce.DTO;
 
 
+import com.TTN.Ecommerce.Entities.Address;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,5 +19,5 @@ public class CustomerDTO extends UserDTO{
     @Pattern(regexp = "^\\d{10}$", message = "Enter a valid ten-digit phone number.")
     private String contact;
 
-    private List<AddressDTO> addresses =new ArrayList<>();
+    private List<AddressDTO> addresses=new ArrayList<>();
 }

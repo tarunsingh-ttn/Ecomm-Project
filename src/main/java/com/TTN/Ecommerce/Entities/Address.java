@@ -31,6 +31,7 @@ public class Address {
 
     @ManyToOne
     @JoinColumn(name="cust_id")
+    @JsonBackReference
     private Customer customer;
 
 }

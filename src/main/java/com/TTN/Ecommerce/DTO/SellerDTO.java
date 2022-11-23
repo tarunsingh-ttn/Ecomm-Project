@@ -8,7 +8,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-public class SellerDTO extends CustomerDTO{
+public class SellerDTO extends UserDTO{
 
 
     @NotNull(message = "GST number is mandatory field.")

@@ -1,18 +1,20 @@
 package com.TTN.Ecommerce.Services;
 
 import com.TTN.Ecommerce.DAO.CustomerResponse;
+import com.TTN.Ecommerce.Entities.Address;
 import com.TTN.Ecommerce.Entities.Customer;
 import com.TTN.Ecommerce.Entities.User;
 import com.TTN.Ecommerce.Exception.EcommerceException;
+import com.TTN.Ecommerce.Repositories.AddressRepository;
 import com.TTN.Ecommerce.Repositories.CustomerRepository;
 import com.TTN.Ecommerce.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CustomerService {
@@ -24,6 +26,9 @@ public class CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     public List<CustomerResponse> getAllCustomers() throws EcommerceException {
         List<Customer> customerList = customerRepository.findAll();
@@ -53,13 +58,9 @@ public class CustomerService {
         }
         user.setIS_ACTIVE(true);
         userRepository.save(user);
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setSubject("Registration Completed");
-        mailMessage.setFrom("admin@ttn");
-        mailMessage.setText("Your ecommerce account has been activated!!");
+        emailSenderService.sendEmail(user,"Registration Completed","Your ecommerce account has been activated!!");
 
-        emailSenderService.sendEmail(mailMessage);
+
         return "Account has been activated";
     }
 
@@ -70,13 +71,15 @@ public class CustomerService {
         }
         user.setIS_ACTIVE(false);
         userRepository.save(user);
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getEmail());
-        mailMessage.setSubject("Account Deactivated");
-        mailMessage.setFrom("admin@ttn");
-        mailMessage.setText("Your ecommerce account has been de-activated!!");
-
-        emailSenderService.sendEmail(mailMessage);
+        emailSenderService.sendEmail(user,"Account Deactivated","Your ecommerce account has been de-activated!!");
         return "Account de-activation successful";
+    }
+
+    public Set<Address> displayAllAddresses(String email){
+        User user = userRepository.findByEmail(email);
+
+        Customer customer=customerRepository.findByUser(user);
+        Set<Address> customerAddress=  customer.getAddresses();
+        return customerAddress;
     }
 }

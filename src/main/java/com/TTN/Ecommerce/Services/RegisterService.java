@@ -1,5 +1,6 @@
 package com.TTN.Ecommerce.Services;
 
+import com.TTN.Ecommerce.DTO.AddressDTO;
 import com.TTN.Ecommerce.DTO.CustomerDTO;
 import com.TTN.Ecommerce.DTO.SellerDTO;
 import com.TTN.Ecommerce.Entities.*;
@@ -43,7 +44,7 @@ public class RegisterService {
     public Seller createSeller(SellerDTO sellerDTO) throws EcommerceException {
 
 
-        if( userRepository.findByEmail(sellerDTO.getEmail()) !=null) {
+            if( userRepository.findByEmail(sellerDTO.getEmail()) !=null) {
             throw new EcommerceException("Service.SELLER_ALREADY_EXISTS", HttpStatus.CONFLICT);
         }
         User user = new User();
@@ -88,8 +89,7 @@ public class RegisterService {
         User user = new User();
         user.setFirstName(customerDTO.getFirstName());
         user.setLastName(customerDTO.getLastName());
-        user.setPassword(customerDTO.getPassword());
-
+        user.setPassword(passwordEncoder.encode(customerDTO.getPassword()));
         user.setMiddleName(customerDTO.getMiddleName());
         user.setEmail(customerDTO.getEmail());
 
@@ -100,8 +100,9 @@ public class RegisterService {
         Customer customer = new Customer();
         customer.setContact(customerDTO.getContact());
         customer.setUser(user);
-
-        customerDTO.getAddresses().forEach(addressDTO -> {
+        List<AddressDTO> addressList=customerDTO.getAddresses();
+        customerRepository.save(customer);
+        addressList.forEach(addressDTO -> {
             Address address= new Address();
             address.setCity(addressDTO.getCity());
             address.setState(addressDTO.getState());
@@ -115,12 +116,14 @@ public class RegisterService {
 
         });
 
-        customerRepository.save(customer);
+
         userRepository.save(user);
         verificationTokenService.createVerificationToken(user);
 
         return customer;
     }
+
+
 
 
 
