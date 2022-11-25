@@ -36,6 +36,5 @@ public class UserDTO {
     private boolean IS_EXPIRED;
     private boolean IS_LOCKED;
     private Integer INVALID_ATTEMPT_COUNT;
-
     private boolean PASSWORD_UPDATE_DATE;
 }

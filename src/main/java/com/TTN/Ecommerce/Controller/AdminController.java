@@ -26,6 +26,9 @@ public class AdminController {
     private CustomerService customerService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private SellerService sellerService;
 
     @GetMapping("/user/all_seller")
@@ -42,14 +45,14 @@ public class AdminController {
 
     @PutMapping("/user/activate/user")
     public ResponseEntity<String> enableUser(@RequestParam("userId") Long userId) throws EcommerceException {
-        String response=customerService.activateUser(userId);
+        String response=userService.activateUser(userId);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
 
     @PutMapping("/user/de-activate/user")
     public ResponseEntity<String> disableUser(@RequestParam("userId") Long userId) throws EcommerceException {
-        String response=customerService.deactivateUser(userId);
+        String response=userService.deactivateUser(userId);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 

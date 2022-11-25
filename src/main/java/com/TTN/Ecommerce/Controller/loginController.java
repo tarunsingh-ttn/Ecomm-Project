@@ -46,7 +46,7 @@ public class loginController {
     }
 
     @PostMapping("/api/user/login")
-   public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws EcommerceException {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws EcommerceException {
 
        RestTemplate restTemplate = new RestTemplate();
 
@@ -55,7 +55,7 @@ public class loginController {
        headers.setBasicAuth("client", "secret");
        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
       if(!userRepository.findByEmail(loginRequest.getUsername()).isIS_ACTIVE()){
-          throw new EcommerceException("Activate first dude");
+          throw new EcommerceException("Activate first");
       }
 
        MultiValueMap<String, String> valueMap = new LinkedMultiValueMap<>();
@@ -75,6 +75,8 @@ public class loginController {
         return new ResponseEntity<>(response,HttpStatus.OK);
 
     }
+
+
 
 
 

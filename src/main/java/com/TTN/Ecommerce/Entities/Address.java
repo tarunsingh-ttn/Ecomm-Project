@@ -24,7 +24,7 @@ public class Address {
     private long zipCode;
     private String label;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name="seller_id")
     @JsonBackReference
     private Seller seller;

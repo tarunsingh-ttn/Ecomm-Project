@@ -7,6 +7,7 @@ import com.TTN.Ecommerce.DTO.UpdatePassword;
 import com.TTN.Ecommerce.Entities.Seller;
 import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Services.SellerService;
+import com.TTN.Ecommerce.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,9 @@ public class SellerController {
 
     @Autowired
     private SellerService sellerService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/profile")
     public ResponseEntity<SellerProfile> viewProfile(Authentication authentication) throws EcommerceException {
@@ -44,7 +48,7 @@ public class SellerController {
     }*/
     @PatchMapping("/update/pwd")
     public ResponseEntity<String> updatePassword(Authentication authentication, @RequestBody @Valid UpdatePassword updatePassword) throws EcommerceException {
-        String message=sellerService.updatePassword(authentication.getName(),updatePassword);
+        String message=userService.updatePassword(authentication.getName(),updatePassword);
         return new ResponseEntity<>(message,HttpStatus.OK);
     }
 

@@ -4,12 +4,15 @@ package com.TTN.Ecommerce.Services;
 import com.TTN.Ecommerce.DAO.SellerProfile;
 import com.TTN.Ecommerce.DAO.SellerResponse;
 import com.TTN.Ecommerce.DTO.PasswordDTO;
+import com.TTN.Ecommerce.DTO.SellerDTO;
 import com.TTN.Ecommerce.DTO.UpdatePassword;
 import com.TTN.Ecommerce.Entities.Address;
+import com.TTN.Ecommerce.Entities.Role;
 import com.TTN.Ecommerce.Entities.Seller;
 import com.TTN.Ecommerce.Entities.User;
 import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Repositories.AddressRepository;
+import com.TTN.Ecommerce.Repositories.RoleRepository;
 import com.TTN.Ecommerce.Repositories.SellerRepository;
 import com.TTN.Ecommerce.Repositories.UserRepository;
 import org.springframework.beans.BeanUtils;
@@ -31,8 +34,6 @@ public class SellerService {
     @Autowired
     private SellerRepository sellerRepository;
 
-
-
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -40,8 +41,55 @@ public class SellerService {
     private UserRepository userRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
+    private VerificationTokenService verificationTokenService;
+
+    @Autowired
     private EmailSenderService emailSenderService;
 
+    public Seller createSeller(SellerDTO sellerDTO) throws EcommerceException {
+
+
+        if( userRepository.findByEmail(sellerDTO.getEmail()) !=null) {
+            throw new EcommerceException("Service.SELLER_ALREADY_EXISTS", HttpStatus.CONFLICT);
+        }
+        User user = new User();
+        user.setFirstName(sellerDTO.getFirstName());
+        user.setLastName(sellerDTO.getLastName());
+        user.setMiddleName(sellerDTO.getMiddleName());
+        user.setEmail(sellerDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(sellerDTO.getPassword()));
+
+        Role role = roleRepository.findRoleByAuthority("SELLER");
+        user.setRole(role);
+
+        Seller seller = new Seller();
+        seller.setGst(sellerDTO.getGst());
+        seller.setCompanyName(sellerDTO.getCompanyName());
+        seller.setCompanyContact(sellerDTO.getCompanyContact());
+        seller.setUser(user);
+
+        Address address= new Address();
+        address.setCity(sellerDTO.getAddress().getCity());
+        address.setState(sellerDTO.getAddress().getState());
+        address.setAddressLine(sellerDTO.getAddress().getAddressLine());
+        address.setZipCode(sellerDTO.getAddress().getZipCode());
+        address.setCountry(sellerDTO.getAddress().getCountry());
+        address.setLabel(sellerDTO.getAddress().getLabel());
+
+        address.setSeller(seller);
+
+        addressRepository.save(address);
+        sellerRepository.save(seller);
+        userRepository.save(user);
+        verificationTokenService.createVerificationToken(user);
+        return seller;
+    }
     public List<SellerResponse> getAllSellers() throws EcommerceException {
         List<Seller> sellerList=sellerRepository.findAll();
         if(sellerList.isEmpty()){
@@ -64,8 +112,6 @@ public class SellerService {
 
         return sellerResponsesList;
     }
-
-
     public SellerProfile viewSellerProfile(String email) throws EcommerceException {
         User user=userRepository.findByEmail(email);
         if(user==null){
@@ -126,18 +172,7 @@ public class SellerService {
 
     }
 
-    public String updatePassword(String email, UpdatePassword updatePassword) throws EcommerceException {
-        User user=userRepository.findByEmail(email);
-        if(!updatePassword.getPassword().equals(updatePassword.getConfirmPassword())){
-            return "Password do not match";
-        }
-        user.setPassword(passwordEncoder.encode(updatePassword.getPassword()));
-        userRepository.save(user);
 
-        emailSenderService.sendEmail(user,"password has been changed","Hi passowrd for this account has been changed");
-
-        return "Password updated successfully";
-    }
 /*    public String updateProfile(String email,Map<String,Object> fields) throws EcommerceException {
         User user=userRepository.findByEmail(email);
         SellerProfile sellerProfile=new SellerProfile();

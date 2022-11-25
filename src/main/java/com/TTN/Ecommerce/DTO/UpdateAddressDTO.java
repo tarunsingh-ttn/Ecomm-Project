@@ -1,8 +1,8 @@
 package com.TTN.Ecommerce.DTO;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
+import lombok.Data;
 
+@Data
 public class UpdateAddressDTO {
 
     private String city;

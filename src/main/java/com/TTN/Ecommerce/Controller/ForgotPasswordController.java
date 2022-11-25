@@ -20,7 +20,6 @@ import javax.validation.constraints.Email;
 @RequestMapping("/api")
 public class ForgotPasswordController {
 
-
     @Autowired
     private ForgotPasswordService forgotPasswordService;
 

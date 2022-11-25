@@ -23,8 +23,6 @@ public class VerificationTokenService {
     @Autowired
     private UserRepository userRepository;
 
-
-
     @Autowired
     private EmailSenderService emailSenderService;
 
