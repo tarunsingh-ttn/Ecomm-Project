@@ -15,15 +15,12 @@ import java.util.stream.Collectors;
 public class ExceptionControllerAdvice {
     @Autowired
     private Environment environment;
-
     @ExceptionHandler(EcommerceException.class)
     public ResponseEntity<String> ecommerceExceptionHandler(EcommerceException exception){
         return new ResponseEntity<>(environment.getProperty(exception.getMessage()),exception.getStatus() );
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> exceptionHandler(MethodArgumentNotValidException exception) {
-
-
         String errorMsg = exception.getBindingResult().getAllErrors().stream().map(x -> x.getDefaultMessage())
                 .collect(Collectors.joining(", "));
 

@@ -1,8 +1,9 @@
-package com.TTN.Ecommerce.Repositories;
+package com.TTN.Ecommerce.config;
 
 
 import com.TTN.Ecommerce.Entities.Role;
 import com.TTN.Ecommerce.Entities.User;
+import com.TTN.Ecommerce.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +28,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
 	BCryptPasswordEncoder encoder;
 
+
+
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
@@ -35,9 +38,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found for email" + email);
 		}
-		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+		
+		return new org.springframework.security.core.userdetails.User(
+				user.getEmail(),user.getPassword(),true,true,true,true,
 				getAuthorities(user.getRole()));
 	}
+
+
 	private Collection<? extends GrantedAuthority> getAuthorities(Role role) {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority(role.getAuthority()));

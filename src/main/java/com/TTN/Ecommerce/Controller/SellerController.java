@@ -1,10 +1,8 @@
 package com.TTN.Ecommerce.Controller;
 
 
-import com.TTN.Ecommerce.DAO.SellerProfile;
-import com.TTN.Ecommerce.DTO.PasswordDTO;
+import com.TTN.Ecommerce.DTO.SellerProfile;
 import com.TTN.Ecommerce.DTO.UpdatePassword;
-import com.TTN.Ecommerce.Entities.Seller;
 import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Services.SellerService;
 import com.TTN.Ecommerce.Services.UserService;
@@ -15,8 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/seller")
@@ -30,14 +26,13 @@ public class SellerController {
 
     @GetMapping("/profile")
     public ResponseEntity<SellerProfile> viewProfile(Authentication authentication) throws EcommerceException {
-
         SellerProfile seller=sellerService.viewSellerProfile(authentication.getName());
         return new ResponseEntity<>(seller, HttpStatus.OK);
 
     }
 
     @PatchMapping("/update")
-    public ResponseEntity<String> updateProfile(Authentication authentication, @RequestBody SellerProfile profile) throws EcommerceException {
+    public ResponseEntity<String> updateProfile(Authentication authentication, @RequestBody @Valid SellerProfile profile) throws EcommerceException {
         String message=sellerService.updateProfile(authentication.getName(),profile);
         return new ResponseEntity<>(message,HttpStatus.OK);
     }
@@ -47,7 +42,7 @@ public class SellerController {
         return new ResponseEntity<>(message,HttpStatus.OK);
     }*/
     @PatchMapping("/update/pwd")
-    public ResponseEntity<String> updatePassword(Authentication authentication, @RequestBody @Valid UpdatePassword updatePassword) throws EcommerceException {
+    public ResponseEntity<String> updatePassword(Authentication authentication, @RequestBody @Valid  UpdatePassword updatePassword) throws EcommerceException {
         String message=userService.updatePassword(authentication.getName(),updatePassword);
         return new ResponseEntity<>(message,HttpStatus.OK);
     }

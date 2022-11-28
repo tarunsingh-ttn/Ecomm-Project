@@ -1,4 +1,4 @@
-package com.TTN.Ecommerce.DAO;
+package com.TTN.Ecommerce.DTO;
 
 
 import com.TTN.Ecommerce.DTO.AddressDTO;
@@ -17,4 +17,5 @@ public class SellerResponse {
     private String companyName;
     private boolean IS_ACTIVE;
     private Address address;
+    private byte[] sellerImage;
 }

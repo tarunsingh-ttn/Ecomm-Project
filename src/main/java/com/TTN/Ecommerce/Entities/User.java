@@ -1,6 +1,8 @@
 package com.TTN.Ecommerce.Entities;
 
 
+import com.TTN.Ecommerce.utils.Auditable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +13,7 @@ import java.sql.Date;
 @Entity
 @Getter
 @Setter
-public class User {
+public class User extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_gen")
     @SequenceGenerator(name = "user_gen", sequenceName = "user_seq", initialValue = 1, allocationSize=1)
@@ -20,6 +22,8 @@ public class User {
     private String firstName;
     private String middleName;
     private String lastName;
+
+    @JsonIgnore
     private String password;
     private boolean IS_DELETED;
     private boolean IS_ACTIVE;

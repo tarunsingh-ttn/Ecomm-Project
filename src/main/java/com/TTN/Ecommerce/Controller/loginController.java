@@ -54,8 +54,11 @@ public class loginController {
 
        headers.setBasicAuth("client", "secret");
        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+       if(userRepository.findByEmail(loginRequest.getUsername())==null) {
+           throw new EcommerceException("NO USER FOUND", HttpStatus.NOT_FOUND);
+       }
       if(!userRepository.findByEmail(loginRequest.getUsername()).isIS_ACTIVE()){
-          throw new EcommerceException("Activate first");
+          throw new EcommerceException("Activate first",HttpStatus.FORBIDDEN);
       }
 
        MultiValueMap<String, String> valueMap = new LinkedMultiValueMap<>();

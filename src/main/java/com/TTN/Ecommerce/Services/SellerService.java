@@ -1,11 +1,9 @@
 package com.TTN.Ecommerce.Services;
 
 
-import com.TTN.Ecommerce.DAO.SellerProfile;
-import com.TTN.Ecommerce.DAO.SellerResponse;
-import com.TTN.Ecommerce.DTO.PasswordDTO;
+import com.TTN.Ecommerce.DTO.SellerProfile;
+import com.TTN.Ecommerce.DTO.SellerResponse;
 import com.TTN.Ecommerce.DTO.SellerDTO;
-import com.TTN.Ecommerce.DTO.UpdatePassword;
 import com.TTN.Ecommerce.Entities.Address;
 import com.TTN.Ecommerce.Entities.Role;
 import com.TTN.Ecommerce.Entities.Seller;
@@ -21,11 +19,9 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -52,9 +48,10 @@ public class SellerService {
     @Autowired
     private EmailSenderService emailSenderService;
 
+    @Autowired
+    private ImageService imageService;
+
     public Seller createSeller(SellerDTO sellerDTO) throws EcommerceException {
-
-
         if( userRepository.findByEmail(sellerDTO.getEmail()) !=null) {
             throw new EcommerceException("Service.SELLER_ALREADY_EXISTS", HttpStatus.CONFLICT);
         }
@@ -64,16 +61,13 @@ public class SellerService {
         user.setMiddleName(sellerDTO.getMiddleName());
         user.setEmail(sellerDTO.getEmail());
         user.setPassword(passwordEncoder.encode(sellerDTO.getPassword()));
-
         Role role = roleRepository.findRoleByAuthority("SELLER");
         user.setRole(role);
-
         Seller seller = new Seller();
         seller.setGst(sellerDTO.getGst());
         seller.setCompanyName(sellerDTO.getCompanyName());
         seller.setCompanyContact(sellerDTO.getCompanyContact());
         seller.setUser(user);
-
         Address address= new Address();
         address.setCity(sellerDTO.getAddress().getCity());
         address.setState(sellerDTO.getAddress().getState());
@@ -81,21 +75,18 @@ public class SellerService {
         address.setZipCode(sellerDTO.getAddress().getZipCode());
         address.setCountry(sellerDTO.getAddress().getCountry());
         address.setLabel(sellerDTO.getAddress().getLabel());
-
-        address.setSeller(seller);
-
-        addressRepository.save(address);
         sellerRepository.save(seller);
+        address.setSeller(seller);
+        addressRepository.save(address);
         userRepository.save(user);
         verificationTokenService.createVerificationToken(user);
         return seller;
     }
     public List<SellerResponse> getAllSellers() throws EcommerceException {
-        List<Seller> sellerList=sellerRepository.findAll();
-        if(sellerList.isEmpty()){
-            throw new EcommerceException("Service.NO_SELLER_FOUND", HttpStatus.NOT_FOUND);
+        if(sellerRepository.findAll().isEmpty()){
+            throw new EcommerceException("NO_SELLER_FOUND", HttpStatus.NOT_FOUND);
         }
-
+        List<Seller> sellerList=sellerRepository.findAll();
         List<SellerResponse>sellerResponsesList=new ArrayList<>();
         sellerList.forEach((seller)->{
             SellerResponse sellerResponse=new SellerResponse();
@@ -107,9 +98,13 @@ public class SellerService {
             sellerResponse.setIS_ACTIVE(user.isIS_ACTIVE());
             sellerResponse.setGst(seller.getGst());
             sellerResponse.setAddress(seller.getAddress());
+            try {
+                sellerResponse.setSellerImage(imageService.showImage(user.getEmail()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             sellerResponsesList.add(sellerResponse);
         });
-
         return sellerResponsesList;
     }
     public SellerProfile viewSellerProfile(String email) throws EcommerceException {
@@ -117,7 +112,6 @@ public class SellerService {
         if(user==null){
             throw new EcommerceException("User Not Found",HttpStatus.NOT_FOUND);
         }
-
         Seller seller=sellerRepository.findByUser(user);
         if(seller==null){
             throw new EcommerceException("Seller not Found",HttpStatus.NOT_FOUND);
@@ -131,20 +125,17 @@ public class SellerService {
         sellerProfile.setActive(user.isIS_ACTIVE());
         sellerProfile.setUserId(user.getUser_id());
 
-
         return sellerProfile;
     }
 
     public static String[] getNullPropertyNames (Object source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
         java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
-
         Set<String> emptyNames = new HashSet<String>();
         for(java.beans.PropertyDescriptor pd : pds) {
             Object srcValue = src.getPropertyValue(pd.getName());
             if (srcValue == null) emptyNames.add(pd.getName());
         }
-
         String[] result = new String[emptyNames.size()];
         return emptyNames.toArray(result);
     }
@@ -155,7 +146,6 @@ public class SellerService {
         if(user==null){
             throw new EcommerceException("User Not Found",HttpStatus.NOT_FOUND);
         }
-
         Seller seller=sellerRepository.findByUser(user);
         if(seller==null){
             throw new EcommerceException("Seller not Found",HttpStatus.NOT_FOUND);
@@ -164,12 +154,9 @@ public class SellerService {
         BeanUtils.copyProperties(profile, seller, getNullPropertyNames(profile));
         BeanUtils.copyProperties(profile,user,getNullPropertyNames(profile));
         BeanUtils.copyProperties(profile,address,getNullPropertyNames(profile));
-
         userRepository.save(user);
         sellerRepository.save(seller);
-
         return "success";
-
     }
 
 

@@ -16,19 +16,14 @@ import java.util.UUID;
 
 @Service
 public class ForgotPasswordService {
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private VerificationTokenService verificationTokenService;
-
     @Autowired
     private VerificationTokenRepository verificationTokenRepository;
-
     public String reset_password(String email) throws EcommerceException {
         User newUser=userRepository.findByEmail(email);
-//        User newUser=userRepository.findByEmail("tarunsingh021@gmail.com");
         if(newUser==null)
             throw new EcommerceException("Service.USER_NOT_FOUND");
         else {
@@ -36,7 +31,6 @@ public class ForgotPasswordService {
             verificationTokenService.createVerificationToken(newUser);
             return "Service.FORGET_PASSWORD_TOKEN SENT";
             }
-
         }
 
     public String confirmToken(String confirmationToken, PasswordDTO passwordDTO) throws EcommerceException {
@@ -56,9 +50,6 @@ public class ForgotPasswordService {
             userRepository.save(user);
             verificationTokenRepository.delete(token);
         }
-
         return "Password updated successfully";
-
-
     }
 }

@@ -58,7 +58,7 @@ public class CustomerController {
     }
 
     @PatchMapping("/update/address")
-    public ResponseEntity<String>  updateAddress(Authentication authentication,@RequestParam long addressId,@RequestBody UpdateAddressDTO address) throws EcommerceException {
+    public ResponseEntity<String>  updateAddress(Authentication authentication,@RequestParam long addressId,@RequestBody @Valid UpdateAddressDTO address) throws EcommerceException {
         String message=customerService.updateAddress(authentication.getName(),addressId,address);
         return new ResponseEntity<>(message,HttpStatus.CREATED);
     }

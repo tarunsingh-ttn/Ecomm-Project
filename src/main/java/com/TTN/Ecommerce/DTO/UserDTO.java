@@ -12,24 +12,20 @@ import javax.validation.constraints.Size;
 public class UserDTO {
 
 
-    @Email(message = "Enter a valid email.")
+    @Email(message = "{user.email.invalid}")
     private String email;
-    @NotEmpty(message = "First Name is mandatory.")
-    @Size(min = 2, max = 30, message = "Must contain 2-30 characters.")
-    @Pattern(regexp="(^[A-Za-z]*$)",message = "Invalid Input. " +
-            "Name can only contain alphabets.")
+    @NotEmpty(message = "{user.name.firstName.absent}")
+    @Size(min = 2, max = 30, message = "{user.name.firstName.invalid}")
+    @Pattern(regexp="(^[A-Za-z]*$)",message = "{user.name.firstName.invalid}")
     private String firstName;
-    @Pattern(regexp="(^[A-Za-z]*$).{0,30}",message = "Invalid Input. " +
-            "Middle name can only contain alphabets. Must contain 1-30 characters.")
+    @Pattern(regexp="(^[A-Za-z]*$).{0,30}",message = "{user.name.middleName.invalid}")
     private String middleName;
-    @NotEmpty(message = "Last Name is mandatory.")
-    @Size(min = 2, max = 30, message = "Must contain 2-30 characters.")
-    @Pattern(regexp="(^[A-Za-z]*$)",message = "Invalid Input. " +
-            "Name can only contain alphabets. Must contain 2-30 characters.")
+    @NotEmpty(message = "{user.name.lastName.absent}")
+    @Size(min = 2, max = 30, message = "{user.name.lastName.invalid}")
+    @Pattern(regexp="(^[A-Za-z]*$)",message = "{user.name.lastName.invalid}")
     private String lastName;
-
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=])(?=\\S+$).{8,15}",
-            message = "Enter a valid password.")
+            message = "{user.password.invalid}")
     private String password;
     private boolean IS_DELETED;
     private boolean IS_ACTIVE;

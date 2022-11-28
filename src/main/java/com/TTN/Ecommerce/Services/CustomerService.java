@@ -1,6 +1,6 @@
 package com.TTN.Ecommerce.Services;
 
-import com.TTN.Ecommerce.DAO.CustomerResponse;
+import com.TTN.Ecommerce.DTO.CustomerResponse;
 import com.TTN.Ecommerce.DTO.*;
 import com.TTN.Ecommerce.Entities.*;
 import com.TTN.Ecommerce.Exception.EcommerceException;
@@ -25,24 +25,16 @@ import java.util.Set;
 public class CustomerService {
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private CustomerRepository customerRepository;
-
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private AddressRepository addressRepository;
-
     @Autowired
     private VerificationTokenService verificationTokenService;
-
-
-
     public List<CustomerResponse> getAllCustomers() throws EcommerceException {
         List<Customer> customerList = customerRepository.findAll();
         if(customerList.isEmpty()){
@@ -61,8 +53,6 @@ public class CustomerService {
 
         return customerResponsesList;
     }
-
-
     public Customer createCustomer(CustomerDTO customerDTO) throws EcommerceException {
 
         if( userRepository.findByEmail(customerDTO.getEmail()) !=null) {
@@ -110,7 +100,6 @@ public class CustomerService {
         Set<Address> customerAddress=  customer.getAddresses();
         return customerAddress;
     }
-
     public CustomerViewProfile getProfile(String email) throws EcommerceException {
         User user=userRepository.findByEmail(email);
         if(user==null){
@@ -139,7 +128,6 @@ public class CustomerService {
         String[] result = new String[emptyNames.size()];
         return emptyNames.toArray(result);
     }
-
     public String editProfile(String email, CustomerUpdateProfile customerUpdateProfile) throws EcommerceException {
         User user=userRepository.findByEmail(email);
         Customer customer=customerRepository.findByUser(user);
@@ -148,9 +136,8 @@ public class CustomerService {
         BeanUtils.copyProperties(customerUpdateProfile,user,getNullPropertyNames(customerUpdateProfile));
         userRepository.save(user);
         customerRepository.save(customer);
-        return "Success";
+        return "Profile edited Success";
     }
-
     public String addAddress(String email, UpdateAddressDTO addressDTO) {
         User user=userRepository.findByEmail(email);
         Customer customer=customerRepository.findByUser(user);
@@ -168,21 +155,17 @@ public class CustomerService {
 
         return "Address Updated successfully";
     }
-
     public String removeAddress(String email, long addressId) throws EcommerceException {
         Address address=addressRepository.findById(addressId).orElseThrow(()-> new EcommerceException("Address Not found",HttpStatus.NOT_FOUND));
         User user=userRepository.findByEmail(email);
         Customer customer=customerRepository.findByUser(user);
         Long custid=address.getCustomer().getCust_id();
-
         if(customer.getCust_id()!=custid){
-            return "Address not found";
+            throw  new EcommerceException("Address not found",HttpStatus.NOT_FOUND);
         }
         addressRepository.delete(address);
         return "Address deleted succesfully";
     }
-
-
     public String updateAddress(String email, long addressId, UpdateAddressDTO newAddress) throws EcommerceException {
         Address address=addressRepository.findById(addressId).orElseThrow(()-> new EcommerceException("Address Not found",HttpStatus.NOT_FOUND));
         User user=userRepository.findByEmail(email);
@@ -193,9 +176,9 @@ public class CustomerService {
         Long custid=address.getCustomer().getCust_id();
 
         if(customer.getCust_id()!=custid){
-            return "Address not found";
+            throw  new EcommerceException("Address not found",HttpStatus.NOT_FOUND);
         }
-        BeanUtils.copyProperties(newAddress,address,getNullPropertyNames(UpdateAddressDTO.class));
+        BeanUtils.copyProperties(newAddress,address,getNullPropertyNames(newAddress));
         addressRepository.save(address);
         return "Address Update successfully";
     }

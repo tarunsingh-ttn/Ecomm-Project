@@ -1,5 +1,6 @@
 package com.TTN.Ecommerce.Entities;
 
+import com.TTN.Ecommerce.utils.Auditable;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-public class Customer {
+public class Customer extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "customer_gen")
     @SequenceGenerator(name="customer_gen", sequenceName = "customer_seq", initialValue = 1, allocationSize = 1)
@@ -22,7 +23,7 @@ public class Customer {
     private User user;
 
     @OneToMany(mappedBy ="customer",cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonManagedReference("customer-address")
     private Set<Address> addresses;
 
 

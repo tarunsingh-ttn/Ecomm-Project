@@ -18,27 +18,22 @@ import java.util.List;
 
 @Service
 public class UserService {
-
     @Autowired
     private CustomerRepository customerRepository;
-
     @Autowired
     private AddressRepository addressRepository;
-
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private EmailSenderService emailSenderService;
-
     public String activateUser(Long userId) throws EcommerceException {
 
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new EcommerceException("Service.USER_NOT_FOUND", HttpStatus.BAD_REQUEST));
         if(user.isIS_ACTIVE()){
-            return "User is already active";
+            throw new EcommerceException("User is already de-activated",HttpStatus.BAD_REQUEST);
         }
         user.setIS_ACTIVE(true);
         userRepository.save(user);
@@ -47,22 +42,20 @@ public class UserService {
 
         return "Account has been activated";
     }
-
     public String deactivateUser(Long userId) throws EcommerceException {
         User user = userRepository.findById(userId).orElseThrow(() -> new EcommerceException("Service.USER_NOT_FOUND", HttpStatus.NOT_FOUND));
         if(!user.isIS_ACTIVE()){
-            return "User is already de-activated";
+            throw new EcommerceException("User is already de-activated",HttpStatus.BAD_REQUEST);
         }
         user.setIS_ACTIVE(false);
         userRepository.save(user);
         emailSenderService.sendEmail(user,"Account Deactivated","Your ecommerce account has been de-activated!!");
         return "Account de-activation successful";
     }
-
     public String updatePassword(String email, UpdatePassword updatePassword) throws EcommerceException {
         User user=userRepository.findByEmail(email);
         if(!updatePassword.getPassword().equals(updatePassword.getConfirmPassword())){
-            return "Password do not match";
+            throw new EcommerceException("Password do not match",HttpStatus.BAD_REQUEST);
         }
         user.setPassword(passwordEncoder.encode(updatePassword.getPassword()));
         userRepository.save(user);
@@ -71,7 +64,6 @@ public class UserService {
 
         return "Password updated successfully";
     }
-
     public String uploadImage() {
 
         return "Success" ;

@@ -27,10 +27,14 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
+
 
         User user = userRepository.findByEmail(username);
 
@@ -61,4 +65,5 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         userRepository.save(user);
         return new UsernamePasswordAuthenticationToken(username, password,authorities);
     }
-}*/
+}
+*/

@@ -21,10 +21,8 @@ public class LogoutService {
             String authorization = request.getHeader("Authorization");
             if (authorization != null && authorization.contains("Bearer")) {
                 String tokenValue = authorization.replace("Bearer", "").trim();
-
                 OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);
                 tokenStore.removeAccessToken(accessToken);
-
                 OAuth2RefreshToken refreshToken = accessToken.getRefreshToken();
                 tokenStore.removeRefreshToken(refreshToken);
             }

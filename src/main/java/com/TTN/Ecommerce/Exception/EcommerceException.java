@@ -9,7 +9,6 @@ public class EcommerceException extends Exception{
     public EcommerceException(){
         super();
     }
-
     public EcommerceException(String message){
         super(message);
     }

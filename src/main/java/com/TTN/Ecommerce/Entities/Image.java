@@ -1,15 +1,17 @@
 package com.TTN.Ecommerce.Entities;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
+@Data
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    @Column(length = 50000000)
-    private byte[] picByte;
+    private String path;
 
 
 }

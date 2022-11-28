@@ -1,11 +1,8 @@
 package com.TTN.Ecommerce.Controller;
 
 
-import com.TTN.Ecommerce.DAO.CustomerResponse;
-import com.TTN.Ecommerce.DAO.SellerResponse;
-import com.TTN.Ecommerce.DTO.UserDTO;
-import com.TTN.Ecommerce.Entities.Customer;
-import com.TTN.Ecommerce.Entities.User;
+import com.TTN.Ecommerce.DTO.CustomerResponse;
+import com.TTN.Ecommerce.DTO.SellerResponse;
 import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Services.CustomerService;
 import com.TTN.Ecommerce.Services.SellerService;
@@ -18,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 public class AdminController {
 
 
@@ -31,26 +28,26 @@ public class AdminController {
     @Autowired
     private SellerService sellerService;
 
-    @GetMapping("/user/all_seller")
+    @GetMapping("/sellers")
     public ResponseEntity<List<SellerResponse>> retrieveAllSellers() throws EcommerceException {
         List<SellerResponse> customers =sellerService.getAllSellers();
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
 
-    @GetMapping("/user/all_users")
+    @GetMapping("/customers")
     public ResponseEntity<List<CustomerResponse>> retrieveAllCustomers() throws EcommerceException {
         List<CustomerResponse> customers =customerService.getAllCustomers();
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
 
-    @PutMapping("/user/activate/user")
+    @PutMapping("/activate/user")
     public ResponseEntity<String> enableUser(@RequestParam("userId") Long userId) throws EcommerceException {
         String response=userService.activateUser(userId);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
 
-    @PutMapping("/user/de-activate/user")
+    @PutMapping("/de-activate/user")
     public ResponseEntity<String> disableUser(@RequestParam("userId") Long userId) throws EcommerceException {
         String response=userService.deactivateUser(userId);
         return new ResponseEntity<>(response,HttpStatus.OK);

@@ -1,17 +1,16 @@
 package com.TTN.Ecommerce.Controller;
 
+import com.TTN.Ecommerce.Services.ImageService;
 import com.TTN.Ecommerce.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.Multipart;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/user")
@@ -20,10 +19,18 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(value ={"/image"},consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<String> addImage(@RequestPart("imageFile")MultipartFile image){
-        String message=userService.uploadImage();
-        return new ResponseEntity<>("hello", HttpStatus.CREATED);
+    @Autowired
+    private ImageService imageService;
+
+    @PostMapping(value ={"/image"})
+    public ResponseEntity<String> addImage(@RequestParam("imageFile")MultipartFile image) throws IOException {
+        String message=imageService.storeImage(image);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+    @GetMapping(value ={"/image/{name}"})
+    public ResponseEntity<?> showImage(@PathVariable String name) throws IOException {
+      byte[] imageData=imageService.showImage(name);
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(imageData);
     }
 
 }
