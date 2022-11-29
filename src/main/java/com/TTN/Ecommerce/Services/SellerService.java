@@ -88,6 +88,7 @@ public class SellerService {
         }
         List<Seller> sellerList=sellerRepository.findAll();
         List<SellerResponse>sellerResponsesList=new ArrayList<>();
+
         sellerList.forEach((seller)->{
             SellerResponse sellerResponse=new SellerResponse();
             sellerResponse.setCompanyContact(seller.getCompanyContact());
@@ -96,6 +97,7 @@ public class SellerService {
             sellerResponse.setEmail(user.getEmail());
             sellerResponse.setFullName(user.getFirstName()+ " " +user.getMiddleName()+ " "+user.getLastName());
             sellerResponse.setIS_ACTIVE(user.isIS_ACTIVE());
+            sellerResponse.setCompanyName(seller.getCompanyName());
             sellerResponse.setGst(seller.getGst());
             sellerResponse.setAddress(seller.getAddress());
             try {
@@ -103,6 +105,7 @@ public class SellerService {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
             sellerResponsesList.add(sellerResponse);
         });
         return sellerResponsesList;

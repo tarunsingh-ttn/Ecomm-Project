@@ -18,21 +18,29 @@ public class ImageService {
     @Autowired
     private ImageRepository imageRepository;
 
-    private final String FOLDER_PATH="/home/tarun/Documents/E-commerce/src/main/resources/images/";
+    private final String FOLDER_PATH="/home/tarun/Documents/E-commerce/src/main/resources/images/users/";
 
-    public String storeImage(MultipartFile File) throws IOException {
-        String imagePath=FOLDER_PATH +"/"+ File.getOriginalFilename();
+    public String storeImage(String email,MultipartFile File) throws IOException {
+
+        String imagePath=FOLDER_PATH + File.getOriginalFilename();
         Image image=new Image();
-        image.setName(File.getOriginalFilename());
+        String name=File.getOriginalFilename();
+        String m=name.substring(0,name.lastIndexOf("."));
+        image.setName(m);
         image.setPath(imagePath);
+        String type=File.getContentType();
+
+
         imageRepository.save(image);
         File.transferTo(new File(imagePath));
         return "File saved to";
     }
     public byte[] showImage(String name) throws IOException {
-        Optional<Image> image=imageRepository.findByName(name);
-        String imagePath=image.get().getPath();
+
+        Image image=imageRepository.findByName(name);
+        String imagePath=image.getPath();
         byte[] images= Files.readAllBytes(new File(imagePath).toPath());
+
         return images;
     }
 

@@ -54,7 +54,9 @@ public class UserService {
     }
     public String updatePassword(String email, UpdatePassword updatePassword) throws EcommerceException {
         User user=userRepository.findByEmail(email);
-        if(!updatePassword.getPassword().equals(updatePassword.getConfirmPassword())){
+        String password=updatePassword.getPassword();
+        String confirmPass=updatePassword.getConfirmPassword();
+        if(!password.equals(confirmPass)){
             throw new EcommerceException("Password do not match",HttpStatus.BAD_REQUEST);
         }
         user.setPassword(passwordEncoder.encode(updatePassword.getPassword()));

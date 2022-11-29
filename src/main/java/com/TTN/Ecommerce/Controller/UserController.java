@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,8 +24,8 @@ public class UserController {
     private ImageService imageService;
 
     @PostMapping(value ={"/image"})
-    public ResponseEntity<String> addImage(@RequestParam("imageFile")MultipartFile image) throws IOException {
-        String message=imageService.storeImage(image);
+    public ResponseEntity<String> addImage(Authentication authentication ,@RequestParam("imageFile")MultipartFile image) throws IOException {
+        String message=imageService.storeImage(authentication.getName(),image);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
     @GetMapping(value ={"/image/{name}"})
