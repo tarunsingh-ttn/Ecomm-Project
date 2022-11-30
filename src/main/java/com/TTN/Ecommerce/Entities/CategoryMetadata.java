@@ -1,11 +1,14 @@
 package com.TTN.Ecommerce.Entities;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class CategoryMetadata {
     @Id

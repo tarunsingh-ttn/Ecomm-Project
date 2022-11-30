@@ -1,8 +1,6 @@
 package com.TTN.Ecommerce.Entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,9 +20,8 @@ public class Category {
     private String name;
     @JoinColumn(name = "parent_id")
     @ManyToOne
-    @JsonBackReference
     private Category parent;
     @OneToMany(mappedBy = "parent")
-    @JsonManagedReference
+    @JsonIgnore
     private Set<Category> children = new HashSet<>();
 }

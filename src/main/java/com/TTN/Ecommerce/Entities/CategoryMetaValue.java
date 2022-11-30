@@ -1,12 +1,15 @@
 package com.TTN.Ecommerce.Entities;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CategoryMetaValue {
 
 
