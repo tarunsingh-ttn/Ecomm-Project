@@ -1,8 +1,9 @@
-/*
 package com.TTN.Ecommerce.config;
 
 import com.TTN.Ecommerce.Entities.User;
+import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Repositories.UserRepository;
+import com.TTN.Ecommerce.Services.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -30,6 +31,9 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    private EmailSenderService emailSenderService;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
@@ -45,6 +49,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
             throw new BadCredentialsException("Account is locked"); // change the exception
         }
 
+
         if (!passwordEncoder.matches(password, user.getPassword())) {
             int counter = user.getINVALID_ATTEMPT_COUNT();
             if(counter < 2){
@@ -52,10 +57,15 @@ public class CustomAuthenticationManager implements AuthenticationManager {
                 userRepository.save(user);
             } else{
                 user.setIS_LOCKED(true);
+                emailSenderService.sendEmail(user,"Account Locked","Hi, Your ecommerce account has been locked ");
                 user.setINVALID_ATTEMPT_COUNT(0);
                 userRepository.save(user);
             }
+
             throw new BadCredentialsException("Invalid Credentials");
+        }
+        if(!user.isIS_ACTIVE()){
+            throw new BadCredentialsException("Activate your account first");
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -66,4 +76,3 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         return new UsernamePasswordAuthenticationToken(username, password,authorities);
     }
 }
-*/

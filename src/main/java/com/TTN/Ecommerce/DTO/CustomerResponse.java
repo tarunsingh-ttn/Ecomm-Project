@@ -10,4 +10,5 @@ public class CustomerResponse {
     private String fullName;
     private String contact;
     private boolean IS_ACTIVE;
+    private byte[] image;
 }

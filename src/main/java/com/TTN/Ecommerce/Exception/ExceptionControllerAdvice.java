@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -27,6 +29,19 @@ public class ExceptionControllerAdvice {
 
         return new ResponseEntity<>(errorMsg, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<String> userNameNotFoundExceptionHandler(Exception exception){
+        return new ResponseEntity<>(exception.getMessage(),HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<String> badCredentialExceptionHandler(Exception exception){
+        return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> generalException(Exception exception){
+        return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
 
 
 }

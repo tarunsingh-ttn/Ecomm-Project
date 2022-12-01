@@ -16,8 +16,8 @@ import java.util.List;
 public class CustomerDTO extends UserDTO{
 
 
-    @NotEmpty(message = "Cust Phone number is a mandatory field.")
-    @Pattern(regexp = "^\\d{10}$", message = "Enter a valid ten-digit phone number.")
+    @NotEmpty(message = "{Customer.contact.absent}")
+    @Pattern(regexp = "^\\d{10}$", message = "{Customer.contact.invalid}")
     private String contact;
     @Valid
     private List<AddressDTO>  addresses=new ArrayList<>();

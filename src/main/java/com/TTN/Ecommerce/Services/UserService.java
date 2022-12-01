@@ -33,7 +33,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new EcommerceException("Service.USER_NOT_FOUND", HttpStatus.BAD_REQUEST));
         if(user.isIS_ACTIVE()){
-            throw new EcommerceException("User is already de-activated",HttpStatus.BAD_REQUEST);
+            throw new EcommerceException("User is already activated",HttpStatus.BAD_REQUEST);
         }
         user.setIS_ACTIVE(true);
         userRepository.save(user);

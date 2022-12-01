@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +26,9 @@ import java.util.Set;
 public class CustomerService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ImageService imageService;
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
@@ -48,6 +52,11 @@ public class CustomerService {
             customerResponse.setUser_id(customerUser.getUser_id());
             customerResponse.setEmail(customerUser.getEmail());
             customerResponse.setFullName(customerUser.getFirstName() + " " + customerUser.getMiddleName() + " " + customerUser.getLastName());
+            try {
+                customerResponse.setImage(imageService.showImage(customerUser.getUser_id()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             customerResponsesList.add(customerResponse);
         });
 
@@ -113,6 +122,11 @@ public class CustomerService {
         customerViewProfile.setUserId(user.getUser_id());
         customerViewProfile.setFirstName(user.getFirstName());
         customerViewProfile.setLastName(user.getLastName());
+        try {
+            customerViewProfile.setImage(imageService.showImage(user.getUser_id()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return customerViewProfile;
     }
     public static String[] getNullPropertyNames (Object source) {

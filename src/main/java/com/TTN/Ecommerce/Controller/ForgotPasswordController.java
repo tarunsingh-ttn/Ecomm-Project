@@ -24,14 +24,14 @@ public class ForgotPasswordController {
     private ForgotPasswordService forgotPasswordService;
 
     @PostMapping("/user/reset_password")
-    public ResponseEntity<String> forgetPassowordToken(@RequestBody @Valid EmailDTO emailDTO) throws EcommerceException {
+    public ResponseEntity<String> forgetPassowordCreateToken(@RequestBody @Valid EmailDTO emailDTO) throws EcommerceException {
         String message=forgotPasswordService.reset_password(emailDTO.getEmail());
         return new ResponseEntity<>(message,HttpStatus.CREATED);
 
     }
 
     @PostMapping("/user/confirm_reset_password")
-    public ResponseEntity<String> forgetPassowordToken(@RequestParam("token") String confirmationToken ,
+    public ResponseEntity<String> forgetPassowordConfirmToken(@RequestParam("token") String confirmationToken ,
                                                        @RequestBody @Valid PasswordDTO passwordDTO) throws EcommerceException {
         String message=forgotPasswordService.confirmToken(confirmationToken,passwordDTO);
         return new ResponseEntity<>(message,HttpStatus.CREATED);

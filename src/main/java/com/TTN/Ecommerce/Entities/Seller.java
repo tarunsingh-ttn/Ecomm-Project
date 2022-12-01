@@ -23,10 +23,6 @@ public class Seller extends Auditable<String> {
     private String gst;
     private String companyContact;
     private String companyName;
-
-
-
-
     //    @OneToOne(mappedBy = "seller")
 //    @MapsId
 //    private User user;

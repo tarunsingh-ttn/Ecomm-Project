@@ -16,6 +16,6 @@ public class CustomerUpdateProfile {
     @Pattern(regexp="(^[A-Za-z]*$)",message = "Invalid Input. " +
             "Name can only contain alphabets. Must contain 2-30 characters.")
     private String lastName;
-    @Size(min=10,max=10,message = "Enter a valid phone number.")
+    @Size(min=10,max=10,message = "Enter a valid phone number")
     private String Contact;
 }

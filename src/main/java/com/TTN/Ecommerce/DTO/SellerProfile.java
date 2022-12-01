@@ -40,5 +40,6 @@ public class SellerProfile {
     private String gst;
     @Valid
     private Address address;
+    private byte[] image;
 
 }

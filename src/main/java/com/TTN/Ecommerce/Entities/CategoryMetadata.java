@@ -15,7 +15,7 @@ public class CategoryMetadata {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "metadata_gen")
     @SequenceGenerator(name="metadata_gen", sequenceName = "metadata_seq", initialValue = 1, allocationSize = 1)
     private long metaId;
-    @Column(unique = true)
+
     private String name;
 
 

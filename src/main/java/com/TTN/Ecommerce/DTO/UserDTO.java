@@ -13,16 +13,17 @@ public class UserDTO {
 
 
     @Email(message = "{user.email.invalid}")
+    @NotEmpty(message = "{user.email.absent}")
     private String email;
     @NotEmpty(message = "{user.name.firstName.absent}")
-    @Size(min = 2, max = 30, message = "{user.name.firstName.invalid}")
-    @Pattern(regexp="(^[A-Za-z]*$)",message = "{user.name.firstName.invalid}")
+    @Size(min = 2, max = 30, message = "{user.name.firstName.invalid.size}")
+    @Pattern(regexp="(^[A-Za-z]*$)",message = "{user.name.firstName.invalid.pattern}")
     private String firstName;
     @Pattern(regexp="(^[A-Za-z]*$).{0,30}",message = "{user.name.middleName.invalid}")
     private String middleName;
     @NotEmpty(message = "{user.name.lastName.absent}")
-    @Size(min = 2, max = 30, message = "{user.name.lastName.invalid}")
-    @Pattern(regexp="(^[A-Za-z]*$)",message = "{user.name.lastName.invalid}")
+    @Size(min = 2, max = 30, message = "{user.name.lastName.invalid.size}")
+    @Pattern(regexp="(^[A-Za-z]*$)",message = "{user.name.lastName.invalid.pattern}")
     private String lastName;
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=])(?=\\S+$).{8,15}",
             message = "{user.password.invalid}")

@@ -14,7 +14,7 @@ import javax.mail.Multipart;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api")
 public class UserController {
 
     @Autowired
@@ -23,13 +23,13 @@ public class UserController {
     @Autowired
     private ImageService imageService;
 
-    @PostMapping(value ={"/image"})
-    public ResponseEntity<String> addImage(Authentication authentication ,@RequestParam("imageFile")MultipartFile image) throws IOException {
+    @PostMapping(value ={"/seller/image"})
+    public ResponseEntity<String> addImage(Authentication authentication ,@RequestParam("imageFile") MultipartFile image) throws IOException {
         String message=imageService.storeImage(authentication.getName(),image);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
-    @GetMapping(value ={"/image/{name}"})
-    public ResponseEntity<?> showImage(@PathVariable String name) throws IOException {
+    @GetMapping(value ={"/user/image/{name}"})
+    public ResponseEntity<?> showImage(@PathVariable Long name) throws IOException {
       byte[] imageData=imageService.showImage(name);
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("image/png")).body(imageData);
     }

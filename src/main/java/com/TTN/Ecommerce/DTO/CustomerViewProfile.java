@@ -15,5 +15,6 @@ public class CustomerViewProfile {
         private boolean isActive;
         private String Contact;
         private Set<Address> address;
+        private byte[] image;
 
 }

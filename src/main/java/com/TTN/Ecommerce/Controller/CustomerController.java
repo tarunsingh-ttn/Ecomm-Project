@@ -1,9 +1,8 @@
 package com.TTN.Ecommerce.Controller;
-
-
-import com.TTN.Ecommerce.DTO.*;
+import com.TTN.Ecommerce.DTO.CustomerUpdateProfile;
+import com.TTN.Ecommerce.DTO.CustomerViewProfile;
+import com.TTN.Ecommerce.DTO.UpdateAddressDTO;
 import com.TTN.Ecommerce.Entities.Address;
-import com.TTN.Ecommerce.Entities.Customer;
 import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Services.CustomerService;
 import com.TTN.Ecommerce.Services.UserService;
@@ -14,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -40,23 +38,20 @@ public class CustomerController {
     }
 
     @PatchMapping("/edit/profile")
-    public ResponseEntity<String> editProfile(Authentication authentication, @RequestBody CustomerUpdateProfile profile) throws EcommerceException {
+    public ResponseEntity<String> editProfile(Authentication authentication, @RequestBody @Valid CustomerUpdateProfile profile) throws EcommerceException {
         String message=customerService.editProfile(authentication.getName(),profile);
         return new ResponseEntity<>(message,HttpStatus.OK);
     }
-
     @PostMapping("/add/address")
-    public ResponseEntity<String> addAddress(Authentication authentication ,@RequestBody UpdateAddressDTO addressDTO){
+    public ResponseEntity<String> addAddress(Authentication authentication ,@RequestBody @Valid UpdateAddressDTO addressDTO){
         String message=customerService.addAddress(authentication.getName(),addressDTO);
         return new ResponseEntity<>(message,HttpStatus.CREATED);
     }
-
     @PostMapping("/remove/address")
     public ResponseEntity<String> deleteAddress(Authentication authentication,@RequestParam long addressId) throws EcommerceException {
         String message=customerService.removeAddress(authentication.getName(),addressId);
         return new ResponseEntity<>(message,HttpStatus.OK);
     }
-
     @PatchMapping("/update/address")
     public ResponseEntity<String>  updateAddress(Authentication authentication,@RequestParam long addressId,@RequestBody @Valid UpdateAddressDTO address) throws EcommerceException {
         String message=customerService.updateAddress(authentication.getName(),addressId,address);

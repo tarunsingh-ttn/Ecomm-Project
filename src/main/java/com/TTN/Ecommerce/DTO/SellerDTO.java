@@ -22,8 +22,9 @@ public class SellerDTO extends UserDTO{
     private String companyContact;
 
     @NotEmpty(message = "{seller.companyName.absent}")
-    @Size(max=30, message = "{seller.companyName.absent}")
+    @Size(max=30, message = "{seller.companyName.invalid}")
     private String companyName;
     @Valid
     private AddressDTO address;
+
 }

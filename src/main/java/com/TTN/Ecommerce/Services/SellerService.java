@@ -1,9 +1,9 @@
 package com.TTN.Ecommerce.Services;
 
 
+import com.TTN.Ecommerce.DTO.SellerDTO;
 import com.TTN.Ecommerce.DTO.SellerProfile;
 import com.TTN.Ecommerce.DTO.SellerResponse;
-import com.TTN.Ecommerce.DTO.SellerDTO;
 import com.TTN.Ecommerce.Entities.Address;
 import com.TTN.Ecommerce.Entities.Role;
 import com.TTN.Ecommerce.Entities.Seller;
@@ -22,7 +22,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class SellerService {
@@ -51,7 +54,7 @@ public class SellerService {
     @Autowired
     private ImageService imageService;
 
-    public Seller createSeller(SellerDTO sellerDTO) throws EcommerceException {
+    public Seller createSeller( SellerDTO sellerDTO) throws EcommerceException {
         if( userRepository.findByEmail(sellerDTO.getEmail()) !=null) {
             throw new EcommerceException("Service.SELLER_ALREADY_EXISTS", HttpStatus.CONFLICT);
         }
@@ -82,13 +85,12 @@ public class SellerService {
         verificationTokenService.createVerificationToken(user);
         return seller;
     }
-    public List<SellerResponse> getAllSellers() throws EcommerceException {
+    public List<SellerResponse> getAllSellers(Integer pageNo,Integer pageSize,String sortBy) throws EcommerceException {
         if(sellerRepository.findAll().isEmpty()){
             throw new EcommerceException("NO_SELLER_FOUND", HttpStatus.NOT_FOUND);
         }
         List<Seller> sellerList=sellerRepository.findAll();
-        List<SellerResponse>sellerResponsesList=new ArrayList<>();
-
+        List<SellerResponse> sellerResponsesList=new ArrayList<>();
         sellerList.forEach((seller)->{
             SellerResponse sellerResponse=new SellerResponse();
             sellerResponse.setCompanyContact(seller.getCompanyContact());
@@ -101,16 +103,15 @@ public class SellerService {
             sellerResponse.setGst(seller.getGst());
             sellerResponse.setAddress(seller.getAddress());
             try {
-                sellerResponse.setSellerImage(imageService.showImage(user.getEmail()));
+                sellerResponse.setSellerImage(imageService.showImage(user.getUser_id()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
             sellerResponsesList.add(sellerResponse);
         });
         return sellerResponsesList;
     }
-    public SellerProfile viewSellerProfile(String email) throws EcommerceException {
+    public SellerProfile viewSellerProfile(String email) throws EcommerceException{
         User user=userRepository.findByEmail(email);
         if(user==null){
             throw new EcommerceException("User Not Found",HttpStatus.NOT_FOUND);
@@ -127,6 +128,12 @@ public class SellerService {
         sellerProfile.setCompanyContact(seller.getCompanyContact());
         sellerProfile.setActive(user.isIS_ACTIVE());
         sellerProfile.setUserId(user.getUser_id());
+
+        try {
+            sellerProfile.setImage(imageService.showImage(user.getUser_id()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         return sellerProfile;
     }

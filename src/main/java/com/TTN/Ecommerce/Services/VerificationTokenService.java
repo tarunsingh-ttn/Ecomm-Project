@@ -6,6 +6,7 @@ import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Repositories.UserRepository;
 import com.TTN.Ecommerce.Repositories.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -53,8 +54,14 @@ public class VerificationTokenService {
     public String reCreateToken(String email) throws EcommerceException {
         User newUser = userRepository.findByEmail(email);
         if (newUser == null)
-            throw new EcommerceException("Service.USER_NOT_FOUND");
+            throw new EcommerceException("Service.USER_NOT_FOUND", HttpStatus.NOT_FOUND);
         else {
+            if(newUser.isIS_LOCKED()){
+                return "User account is locked";
+            }
+            if(newUser.isIS_ACTIVE()){
+                return "User is already activated.";
+            }
             createVerificationToken(newUser);
         }
         return "New Token Sent";

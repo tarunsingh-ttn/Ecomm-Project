@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 @SpringBootTest
-class ECommerceApplicationTests {
+class 	ECommerceApplicationTests {
 
 	@Autowired
 	UserRepository userRepository;

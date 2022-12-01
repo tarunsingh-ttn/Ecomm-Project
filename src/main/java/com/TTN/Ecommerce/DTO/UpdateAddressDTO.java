@@ -7,20 +7,20 @@ import javax.validation.constraints.Size;
 
 @Data
 public class UpdateAddressDTO {
-    @Pattern(regexp="(^[A-Za-z ]*$)",message = "Can only contain alphabets.")
-    @Size(min = 2,max = 30)
+    @Pattern(regexp="(^[A-Za-z ]*$)",message = "{address.city.invalid}")
+    @Size(min = 2,max = 30,message = "{address.city.invalid}")
     private String city;
-    @Pattern(regexp="(^[A-Za-z ]*$)",message = "Can only contain alphabets.")
+    @Pattern(regexp="(^[A-Za-z ]*$)",message = "{address.state.invalid}")
     @Size(min = 2,max = 30)
     private String state;
-    @Pattern(regexp="(^[A-Za-z ]*$)",message = "Can only contain alphabets.")
-    @Size(min = 2,max = 30)
+    @Pattern(regexp="(^[A-Za-z ]*$)",message = "{address.country.invalid}")
+    @Size(min = 2,max = 30,message="{address.country.invalid}")
     private String country;
-    @Pattern(regexp="(^[A-Za-z0-9/., -]*$)",message = "Can only contain alphabets, numbers and '/'.")
-    @Size(min = 2,max = 30)
+    @Pattern(regexp="(^[A-Za-z0-9/., -]*$)",message = "{address.addressLine.invalid}")
+    @Size(min = 2,max = 30,message = "{address.addressLine.invalid}")
     private String addressLine;
-    @Pattern(regexp="(^[0-9]*$)",message = "Can only contain numbers.")
-    @Size(min = 6,max = 6,message = "Zip code should only have 6 digits.")
+    @Pattern(regexp="(^[0-9]*$)",message = "{address.zipCode.invalid}")
+    @Size(min = 6,max = 6,message = "{address.zipCode.invalid}")
     private String zipCode;
 
     private String label;

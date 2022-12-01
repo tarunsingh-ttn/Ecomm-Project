@@ -13,18 +13,18 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("api/user/data")
+
 public class MetadataController {
     @Autowired
     private MetaDataService metaDataService;
 
-    @PostMapping("/create")
+    @PostMapping("/api/admin/metadata/add")
     public ResponseEntity<String> createMetaDataField(@RequestBody CreateMetaData metaData) throws EcommerceException {
         String message = metaDataService.createMetaData(metaData.getName());
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
-    @GetMapping("/view")
+    @GetMapping("api/admin/metadata/view")
     public ResponseEntity<List<CategoryMetadata>> viewMetaData() throws EcommerceException {
         List<CategoryMetadata> metadata= metaDataService.getMetaData();
         return new ResponseEntity<>(metadata,HttpStatus.OK);

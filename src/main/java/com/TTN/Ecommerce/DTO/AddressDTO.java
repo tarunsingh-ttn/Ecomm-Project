@@ -31,8 +31,8 @@ public class AddressDTO {
     private String addressLine;
 
     @NotEmpty(message = "{address.zipCode.absent}")
-    @Pattern(regexp = "(^[0-9]*$)", message = "address.zipCode.invalid")
-    @Size(min = 6, max = 6, message = "address.zipCode.invalid")
+    @Pattern(regexp = "(^[0-9]*$)", message = "{address.zipCode.invalid}")
+    @Size(min = 6, max = 6, message = "{address.zipCode.invalid}")
     private String zipCode;
 
     private String label;

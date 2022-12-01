@@ -25,7 +25,7 @@ public class MetaDataService {
         CategoryMetadata newMetadata=new CategoryMetadata();
         CategoryMetadata metadata=metaDataRepository.findByName(name);
         if(metadata!=null){
-            throw new EcommerceException("Metadata exist already", HttpStatus.BAD_REQUEST);
+            throw new EcommerceException("API.METADATA.ALREADY.EXIST", HttpStatus.BAD_REQUEST);
         }
         newMetadata.setName(name);
         Long id= metaDataRepository.save(newMetadata).getMetaId();

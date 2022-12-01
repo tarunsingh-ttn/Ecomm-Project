@@ -24,9 +24,13 @@ public class ForgotPasswordService {
     private VerificationTokenRepository verificationTokenRepository;
     public String reset_password(String email) throws EcommerceException {
         User newUser=userRepository.findByEmail(email);
+
         if(newUser==null)
-            throw new EcommerceException("Service.USER_NOT_FOUND");
+            throw new EcommerceException("Service.USER_NOT_FOUND",HttpStatus.NOT_FOUND  );
         else {
+            if(!newUser.isIS_ACTIVE()){
+                throw new EcommerceException("Account is not active",HttpStatus.NOT_FOUND);
+            }
             newUser.setPassword(UUID.randomUUID().toString());
             verificationTokenService.createVerificationToken(newUser);
             return "Service.FORGET_PASSWORD_TOKEN SENT";
