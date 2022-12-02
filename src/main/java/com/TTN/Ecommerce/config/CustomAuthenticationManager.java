@@ -57,7 +57,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
                 userRepository.save(user);
             } else{
                 user.setIS_LOCKED(true);
-                emailSenderService.sendEmail(user,"Account Locked","Hi, Your ecommerce account has been locked ");
+                emailSenderService.sendEmail(user.getEmail(),"Account Locked","Hi, Your ecommerce account has been locked ");
                 user.setINVALID_ATTEMPT_COUNT(0);
                 userRepository.save(user);
             }

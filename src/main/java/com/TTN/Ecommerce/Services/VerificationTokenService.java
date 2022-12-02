@@ -28,7 +28,7 @@ public class VerificationTokenService {
         verificationTokenRepository.save(verificationToken);
         String text = "To confirm your account, please click here : "
                 + "http://localhost:8080/api/user/confirm-account?token=" + verificationToken.getVerificationToken();
-        emailSenderService.sendEmail(user, "Complete Registration", text);
+        emailSenderService.sendEmail(user.getEmail(), "Complete Registration", text);
     }
 
     public String verifyToken(String confirmationToken) {

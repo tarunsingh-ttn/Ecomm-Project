@@ -1,10 +1,18 @@
 package com.TTN.Ecommerce.Entities;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.*;
+
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductVariation {
 
     @Id
@@ -16,8 +24,14 @@ public class ProductVariation {
 
     private long price;
 
+    private String metadata;
+
+    private String imageName;
+
     private boolean IS_ACTIVE;
 
-
+    @ManyToOne
+    @JoinColumn(name="prodId")
+    private Product product;
 
 }

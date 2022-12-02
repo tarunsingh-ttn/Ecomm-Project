@@ -37,7 +37,7 @@ public class UserService {
         }
         user.setIS_ACTIVE(true);
         userRepository.save(user);
-        emailSenderService.sendEmail(user,"Registration Completed","Your ecommerce account has been activated!!");
+        emailSenderService.sendEmail(user.getEmail(),"Registration Completed","Your ecommerce account has been activated!!");
 
 
         return "Account has been activated";
@@ -49,7 +49,7 @@ public class UserService {
         }
         user.setIS_ACTIVE(false);
         userRepository.save(user);
-        emailSenderService.sendEmail(user,"Account Deactivated","Your ecommerce account has been de-activated!!");
+        emailSenderService.sendEmail(user.getEmail(),"Account Deactivated","Your ecommerce account has been de-activated!!");
         return "Account de-activation successful";
     }
     public String updatePassword(String email, UpdatePassword updatePassword) throws EcommerceException {
@@ -62,7 +62,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(updatePassword.getPassword()));
         userRepository.save(user);
 
-        emailSenderService.sendEmail(user,"password has been changed","Hi passowrd for this account has been changed");
+        emailSenderService.sendEmail(user.getEmail(),"password has been changed","Hi passowrd for this account has been changed");
 
         return "Password updated successfully";
     }
