@@ -1,5 +1,7 @@
-package com.TTN.Ecommerce.DTO;
+package com.TTN.Ecommerce.DTO.Seller;
 
+import com.TTN.Ecommerce.DTO.Address.AddressDTO;
+import com.TTN.Ecommerce.DTO.UserDTO;
 import lombok.Data;
 
 import javax.validation.Valid;
@@ -9,7 +11,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
-public class SellerDTO extends UserDTO{
+public class SellerDTO extends UserDTO {
 
 
     @NotNull(message = "{seller.gst.absent}")

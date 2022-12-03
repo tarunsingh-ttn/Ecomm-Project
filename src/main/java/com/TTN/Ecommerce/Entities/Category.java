@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -24,4 +26,12 @@ public class Category {
     @OneToMany(mappedBy = "parent")
     @JsonIgnore
     private Set<Category> children = new HashSet<>();
+    private static final List<String> allChildren=new ArrayList<>();
+    public List<String> getAllChildren(Category parent,List<String> childList){
+        for(Category child: parent.getChildren()){
+            allChildren.add(child.getName());
+            getAllChildren(child,allChildren);
+        }
+        return allChildren;
+    }
 }

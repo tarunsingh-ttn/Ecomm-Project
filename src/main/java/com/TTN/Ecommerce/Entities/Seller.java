@@ -29,11 +29,7 @@ public class Seller extends Auditable<String> {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
-
     @OneToOne(mappedBy = "seller",cascade = CascadeType.ALL)
     @JsonManagedReference("seller-address")
     private Address address;
-
-
-
 }

@@ -1,31 +1,33 @@
 package com.TTN.Ecommerce.Services;
 
-import com.TTN.Ecommerce.DTO.ProductDTO.CreateProductDTO;
-import com.TTN.Ecommerce.DTO.ProductDTO.UpdateProductDTO;
-import com.TTN.Ecommerce.DTO.ProductDTO.ViewProductDTO;
-import com.TTN.Ecommerce.Entities.Category;
-import com.TTN.Ecommerce.Entities.Product;
-import com.TTN.Ecommerce.Entities.Seller;
+import com.TTN.Ecommerce.DTO.ProductDTO.*;
+import com.TTN.Ecommerce.Entities.*;
 import com.TTN.Ecommerce.Exception.EcommerceException;
-import com.TTN.Ecommerce.Repositories.CategoryRepository;
-import com.TTN.Ecommerce.Repositories.ProductRepository;
-import com.TTN.Ecommerce.Repositories.SellerRepository;
-import com.TTN.Ecommerce.Repositories.UserRepository;
+import com.TTN.Ecommerce.Repositories.*;
 import com.TTN.Ecommerce.utils.FilterDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private ProductVariationRepository variationRepository;
     @Autowired
     private Environment environment;
 
@@ -36,6 +38,8 @@ public class ProductService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired CategoryMetaValueRepository metaValueRepository;
 
     @Autowired
     private SellerRepository sellerRepository;
@@ -56,15 +60,13 @@ public class ProductService {
         product.setName(createProductDTO.getName());
         product.setBrand(createProductDTO.getBrand());
         product.setDescription(createProductDTO.getDescription());
-        product.setIS_CANCELLABLE(createProductDTO.isIS_CANCELLABLE());
-        product.setIS_RETURNABLE(createProductDTO.isIS_RETURNABLE());
+        product.setCancellable(createProductDTO.getIS_CANCELLABLE());
+        product.setReturnable(createProductDTO.getIS_RETURNABLE());
         Long prodId = productRepository.save(product).getProdId();
         emailSenderService.sendEmail(environment.getProperty("ADMIN.EMAIL"), "New Product is added", "Product Details" + product.toString());
 
         return "Product created successfully with" + prodId;
     }
-
-
     public ViewProductDTO viewProduct(String email, Long prodId) throws EcommerceException {
         Product product = productRepository.findById(prodId).orElseThrow(() -> new EcommerceException("PRODUCT_NOT_FOUND", HttpStatus.NOT_FOUND));
         Seller seller=sellerRepository.findByUser(userRepository.findByEmail(email));
@@ -77,10 +79,11 @@ public class ProductService {
         productDTO.setBrand(product.getBrand());
         productDTO.setDescription(product.getDescription());
         productDTO.setProdId(product.getProdId());
-        productDTO.setActive(product.isIS_ACTIVE());
+        productDTO.setIsActive(product.isActive());
+        productDTO.setIsCancellable(product.isCancellable());
+        productDTO.setIsReturnable(product.isReturnable());
         return productDTO;
     }
-
     public String removeProduct(String email, Long prodId) throws EcommerceException {
         Product product = productRepository.findById(prodId).orElseThrow(() -> new EcommerceException("PRODUCT_NOT_FOUND", HttpStatus.NOT_FOUND));
         Seller seller=sellerRepository.findByUser(userRepository.findByEmail(email));
@@ -90,7 +93,6 @@ public class ProductService {
         productRepository.delete(product);
         return "Product deleted successfully";
     }
-
     public List<ViewProductDTO> displayAllProducts(String email) throws EcommerceException {
         List<Product> productList=productRepository.findBySeller(sellerRepository.findByUser(userRepository.findByEmail(email)));
         if(productList.isEmpty()){
@@ -105,12 +107,13 @@ public class ProductService {
             productDTO.setBrand(product.getBrand());
             productDTO.setDescription(product.getDescription());
             productDTO.setProdId(product.getProdId());
-            productDTO.setActive(product.isIS_ACTIVE());
+            productDTO.setIsActive(product.isActive());
+            productDTO.setIsCancellable(product.isCancellable());
+            productDTO.setIsReturnable(product.isReturnable());
             viewProductDTOList.add(productDTO);
         });
         return viewProductDTOList;
     }
-
     public String updateProduct(String name, Long prodId, UpdateProductDTO newProduct) throws EcommerceException {
 
         Product product=productRepository.findById(prodId).orElseThrow(()-> new EcommerceException("PRODUCT_NOT_FOUND",HttpStatus.NOT_FOUND));
@@ -126,14 +129,13 @@ public class ProductService {
         productRepository.save(product);
         return "Product updated successfully";
     }
-
     public String activateProduct(Long prodId) throws EcommerceException {
         Product product=productRepository.findById(prodId).orElseThrow(()->new EcommerceException("PRODUCT_NOT_FOUND",HttpStatus.NOT_FOUND));
 
-        if(product.isIS_ACTIVE()){
+        if(product.isActive()){
             return "PRODUCT is already active";
         }
-        product.setIS_ACTIVE(true);
+        product.setActive(true);
         String sellerEmail=product.getSeller().getUser().getEmail();
         emailSenderService.sendEmail(sellerEmail,"Product activated","Hi Your Product"+product.getName() +"has been activated");
         productRepository.save(product);
@@ -142,13 +144,103 @@ public class ProductService {
     public String deactivateProduct(Long prodId) throws EcommerceException {
         Product product=productRepository.findById(prodId).orElseThrow(()->new EcommerceException("PRODUCT_NOT_FOUND",HttpStatus.NOT_FOUND));
 
-        if(!product.isIS_ACTIVE()){
+        if(!product.isActive()){
             return "PRODUCT is already de-active";
         }
-        product.setIS_ACTIVE(false);
+        product.setActive(false);
         String sellerEmail=product.getSeller().getUser().getEmail();
         emailSenderService.sendEmail(sellerEmail,"Product de-activated","Hi Your Product"+product.getName() +"has been de-activated");
         productRepository.save(product);
         return "Product has been successfully de-activated";
+    }
+    public ViewProductDTO adminViewProduct(Long prodId) throws EcommerceException {
+        Product product = productRepository.findById(prodId).orElseThrow(() -> new EcommerceException("PRODUCT_NOT_FOUND", HttpStatus.NOT_FOUND));
+        ViewProductDTO viewProductDTO = new ViewProductDTO();
+        viewProductDTO.setProdId(product.getProdId());
+        viewProductDTO.setName(product.getName());
+        viewProductDTO.setBrand(product.getBrand());
+        viewProductDTO.setDescription(product.getDescription());
+        viewProductDTO.setIsActive(product.isActive());
+        viewProductDTO.setIsReturnable(product.isReturnable());
+        viewProductDTO.setIsCancellable(product.isCancellable());
+        viewProductDTO.setCategory(product.getCategory());
+        return viewProductDTO;
+    }
+
+    public String addVariation(CreateVariation variationData) throws EcommerceException, JSONException {
+        ProductVariation variation=new ProductVariation();
+        Product product=productRepository.findById(variationData.getProdId()).orElseThrow(()->new EcommerceException("PRODUCT_NOT_FOUND",HttpStatus.NOT_FOUND));
+//        if(!product.isActive()){
+//            throw new EcommerceException("PRODUCT_NOT_ACTIVE",HttpStatus.BAD_REQUEST);
+//        }
+//        if(product.isDeleted()){
+//            throw new EcommerceException("PRODUCT_IS_DELETED",HttpStatus.BAD_REQUEST);
+//        }
+
+//        ObjectMapper mapper=new ObjectMapper();
+//        try {
+//            String json= mapper.writeValueAsString(variationData.getMetadata());
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+        List<CategoryMetaValue> metavalue=metaValueRepository.findByCategory(product.getCategory());
+        Map<String,String> metaDataFields=new HashMap<>();
+        metavalue.forEach((CategoryMetaValue)->{
+            metaDataFields.put(CategoryMetaValue.getCategoryMetadataField().getName(),CategoryMetaValue.getValue());
+        });
+        JSONObject metadata=new JSONObject();
+
+        for (Map.Entry<String, String> entry : variationData.getMetadata().entrySet()) {
+            String k = entry.getKey();
+            String v = entry.getValue();
+            if (metaDataFields.get(k) == null || !metaDataFields.get(k).contains(v))
+                throw new EcommerceException("Service.Product.Invalid.Metadata", HttpStatus.BAD_REQUEST);
+            metadata.put(k,v);
+        }
+        variation.setPrice(variationData.getPrice());
+        variation.setProduct(product);
+        variation.setJsonData(metadata);
+        variation.setQuantity(variationData.getQuantity());
+        variationRepository.save(variation);
+        return "Success";
+    }
+
+    public ViewVariation getVariation(String email,Long varId) throws EcommerceException {
+        ProductVariation variation=variationRepository.findById(varId).orElseThrow(()->new EcommerceException("SERVICE.VARIATION.NOT.FOUND",HttpStatus.NOT_FOUND));
+        Product product=variation.getProduct();
+        Seller seller=sellerRepository.findByUser(userRepository.findByEmail(email));
+        if(!(product.getSeller().getSeller_id()==seller.getSeller_id())){
+            throw new EcommerceException("PRODUCT_NOT_FOUND",HttpStatus.NOT_FOUND);
+        }
+        ViewVariation variationResponse=new ViewVariation();
+        variationResponse.setPrice(variation.getPrice());
+        variationResponse.setProduct(product);
+        variationResponse.setQuantity(variation.getQuantity());
+        ObjectMapper mapper=new ObjectMapper();
+
+//        try {
+//            Map<String, String> map = mapper.readValue(variation.getJsonData().toString(), Map.class);
+//            variationResponse.setMetadata(map);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+        Map<String, String> map=new HashMap<>();
+        JSONObject jsonObject=variation.getJsonData();//getString
+        Iterator<String> keysItr = jsonObject.keys();
+        variationResponse.setVarId(variation.getId());
+
+        while(keysItr.hasNext()) {
+            String key = keysItr.next();
+            String value="" ;
+            try {
+                value = value+ jsonObject.get(key);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+            map.put(key, value);
+        }
+        variationResponse.setMetadata(map);
+
+        return variationResponse;
     }
 }

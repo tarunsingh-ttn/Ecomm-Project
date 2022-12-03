@@ -1,7 +1,8 @@
-package com.TTN.Ecommerce.DTO;
+package com.TTN.Ecommerce.DTO.CustomerDTO;
 
 
-import com.TTN.Ecommerce.Entities.Address;
+import com.TTN.Ecommerce.DTO.Address.AddressDTO;
+import com.TTN.Ecommerce.DTO.UserDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CustomerDTO extends UserDTO{
+public class CustomerDTO extends UserDTO {
 
 
     @NotEmpty(message = "{Customer.contact.absent}")

@@ -1,6 +1,7 @@
-package com.TTN.Ecommerce.DTO;
+package com.TTN.Ecommerce.DTO.Category;
 
 
+import com.TTN.Ecommerce.DTO.MetadataResponseDTO;
 import com.TTN.Ecommerce.Entities.Category;
 import lombok.Getter;
 import lombok.Setter;

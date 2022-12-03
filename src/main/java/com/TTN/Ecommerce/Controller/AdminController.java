@@ -1,8 +1,8 @@
 package com.TTN.Ecommerce.Controller;
 
 
-import com.TTN.Ecommerce.DTO.CustomerResponse;
-import com.TTN.Ecommerce.DTO.SellerResponse;
+import com.TTN.Ecommerce.DTO.CustomerDTO.CustomerResponse;
+import com.TTN.Ecommerce.DTO.Seller.SellerResponse;
 import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Services.CustomerService;
 import com.TTN.Ecommerce.Services.SellerService;

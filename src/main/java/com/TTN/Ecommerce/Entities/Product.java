@@ -2,6 +2,7 @@ package com.TTN.Ecommerce.Entities;
 
 
 import com.TTN.Ecommerce.utils.Auditable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,16 +27,16 @@ public class Product extends Auditable<String> {
     private long prodId;
     private String name;
     private String description;
-    private boolean IS_CANCELLABLE;
-    private boolean IS_RETURNABLE;
+    private boolean isCancellable;
+    private boolean isReturnable;
     private String brand;
-    private boolean IS_ACTIVE;
-    private boolean IS_DELETED;
+    private boolean isActive;
+    private boolean isDeleted;
 
     @JoinColumn(name = "sellerId")
     @ManyToOne
+    @JsonIgnore
     private Seller seller;
-
     @JoinColumn(name="catId")
     @OneToOne
     private Category category;
@@ -46,11 +47,11 @@ public class Product extends Auditable<String> {
                 "prodId=" + prodId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", IS_CANCELLABLE=" + IS_CANCELLABLE +
-                ", IS_RETURNABLE=" + IS_RETURNABLE +
+                ", IS_CANCELLABLE=" + isCancellable +
+                ", IS_RETURNABLE=" + isReturnable +
                 ", brand='" + brand + '\'' +
-                ", IS_ACTIVE=" + IS_ACTIVE +
-                ", IS_DELETED=" + IS_DELETED +
+                ", IS_ACTIVE=" + isActive +
+                ", IS_DELETED=" + isDeleted +
                 ", seller=" + seller +
                 ", category=" + category +
                 '}';

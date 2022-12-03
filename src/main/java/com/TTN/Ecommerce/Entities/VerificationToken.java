@@ -14,19 +14,16 @@ import java.util.UUID;
 @Entity
 @Data
 public class VerificationToken extends Auditable<String> {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="token_id")
     private long tokenid;
-
     @Column(name="confirmation_token")
     private String verificationToken;
     @Transient
     private int expiryTimeInMinutes=5;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
-
     @Temporal(TemporalType.TIMESTAMP)
     private Date expiryDate;
 

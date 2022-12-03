@@ -1,11 +1,11 @@
 package com.TTN.Ecommerce.Controller;
 
-import com.TTN.Ecommerce.DTO.ProductDTO.CreateProductDTO;
-import com.TTN.Ecommerce.DTO.ProductDTO.UpdateProductDTO;
-import com.TTN.Ecommerce.DTO.ProductDTO.ViewProductDTO;
+import com.TTN.Ecommerce.DTO.ProductDTO.*;
+import com.TTN.Ecommerce.Entities.ProductVariation;
 import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -55,6 +55,30 @@ public class ProductController {
     public ResponseEntity<String> deactivateProduct(@RequestParam Long prodId) throws EcommerceException {
         String message=productService.deactivateProduct(prodId);
         return new ResponseEntity<>(message,HttpStatus.OK);
+    }
+
+    //not tested
+    @GetMapping("api/admin/product/view")
+    public ResponseEntity<ViewProductDTO> viewAdminProduct(@PathVariable Long prodId) throws EcommerceException {
+        ViewProductDTO response = productService.adminViewProduct(prodId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+//    @GetMapping("api/admin/product/view/al")
+//    public ResponseEntity<List<ProductResponseDTO>> viewAdminAllProducts(){
+//        List<ProductResponseDTO> response = productService.adminViewAllProducts();
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
+
+    @PostMapping("api/seller/variant/add")
+    public ResponseEntity<String> createVariation(@RequestBody CreateVariation variation) throws EcommerceException, JSONException {
+        String message=productService.addVariation(variation);
+        return new ResponseEntity<>(message,HttpStatus.OK);
+    }
+    @GetMapping("api/seller/variant/view")
+    public ResponseEntity<ViewVariation> viewVariation(Authentication authentication,@RequestParam Long varId) throws EcommerceException {
+        return new ResponseEntity<>(productService.getVariation(authentication.getName(),varId),HttpStatus.OK);
     }
 
 

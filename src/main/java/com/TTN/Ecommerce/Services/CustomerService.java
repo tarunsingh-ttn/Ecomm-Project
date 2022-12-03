@@ -1,7 +1,11 @@
 package com.TTN.Ecommerce.Services;
 
-import com.TTN.Ecommerce.DTO.CustomerResponse;
-import com.TTN.Ecommerce.DTO.*;
+import com.TTN.Ecommerce.DTO.Address.AddressDTO;
+import com.TTN.Ecommerce.DTO.Address.UpdateAddressDTO;
+import com.TTN.Ecommerce.DTO.CustomerDTO.CustomerDTO;
+import com.TTN.Ecommerce.DTO.CustomerDTO.CustomerResponse;
+import com.TTN.Ecommerce.DTO.CustomerDTO.CustomerUpdateProfile;
+import com.TTN.Ecommerce.DTO.CustomerDTO.CustomerViewProfile;
 import com.TTN.Ecommerce.Entities.*;
 import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Repositories.AddressRepository;

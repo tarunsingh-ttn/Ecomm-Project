@@ -1,4 +1,4 @@
-package com.TTN.Ecommerce.DTO;
+package com.TTN.Ecommerce.DTO.Category;
 
 import lombok.Getter;
 import lombok.Setter;

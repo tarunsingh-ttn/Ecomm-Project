@@ -17,14 +17,10 @@ public class Customer extends Auditable<String> {
     @SequenceGenerator(name="customer_gen", sequenceName = "customer_seq", initialValue = 1, allocationSize = 1)
     private long cust_id;
     private String contact;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_id",referencedColumnName = "user_id")
     private User user;
-
     @OneToMany(mappedBy ="customer",cascade = CascadeType.ALL)
     @JsonManagedReference("customer-address")
     private Set<Address> addresses;
-
-
 }

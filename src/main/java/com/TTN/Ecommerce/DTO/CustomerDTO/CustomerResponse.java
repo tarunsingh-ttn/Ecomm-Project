@@ -1,4 +1,4 @@
-package com.TTN.Ecommerce.DTO;
+package com.TTN.Ecommerce.DTO.CustomerDTO;
 
 
 import lombok.Data;

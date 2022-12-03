@@ -5,6 +5,8 @@ import com.TTN.Ecommerce.utils.Auditable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -13,6 +15,8 @@ import java.sql.Date;
 @Entity
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE user_id=?")
+@Where(clause = "is_deleted=false")
 public class User extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_gen")

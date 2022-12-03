@@ -1,6 +1,7 @@
 package com.TTN.Ecommerce.Services;
 
 import com.TTN.Ecommerce.DTO.*;
+import com.TTN.Ecommerce.DTO.Category.*;
 import com.TTN.Ecommerce.Entities.Category;
 import com.TTN.Ecommerce.Entities.CategoryMetaValue;
 import com.TTN.Ecommerce.Entities.CategoryMetadata;
@@ -12,11 +13,9 @@ import com.TTN.Ecommerce.Repositories.CategoryRepository;
 import com.TTN.Ecommerce.utils.FilterDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.*;
 
 @Service
@@ -32,7 +31,16 @@ public class CategoryService {
     private CategoryMetaValueRepository categoryMetaValueRepository;
 
     public String addCategory(CreateCategory category) throws EcommerceException {
+
         Category newCategory = new Category();
+
+//        List<String> result=newCategory.getAllChildren(categoryRepository.findById(19L).get(),List.of("hello"));
+//        if(categoryRepository.findByName(category.getName()).isPresent()){
+//            return "category exist";
+//        }
+//        if(result.contains(category.getName())){
+//            return "category exist";
+//        }
         newCategory.setName(category.getName());
         if (category.getParentId() != null) {
             Category parentCategory = categoryRepository.findById(category.getParentId())
@@ -209,4 +217,5 @@ public class CategoryService {
             return rootNodes;
         }
     }
+
 }

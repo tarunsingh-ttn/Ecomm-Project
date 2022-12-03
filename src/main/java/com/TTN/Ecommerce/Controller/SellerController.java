@@ -1,7 +1,7 @@
 package com.TTN.Ecommerce.Controller;
 
 
-import com.TTN.Ecommerce.DTO.SellerProfile;
+import com.TTN.Ecommerce.DTO.Seller.SellerProfile;
 import com.TTN.Ecommerce.DTO.UpdatePassword;
 import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Services.SellerService;

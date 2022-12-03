@@ -1,6 +1,10 @@
 package com.TTN.Ecommerce.Controller;
 
 import com.TTN.Ecommerce.DTO.*;
+import com.TTN.Ecommerce.DTO.Category.CategoryUpdateDTO;
+import com.TTN.Ecommerce.DTO.Category.CreateCategory;
+import com.TTN.Ecommerce.DTO.Category.SellerCategoryResponseDTO;
+import com.TTN.Ecommerce.DTO.Category.ViewCategory;
 import com.TTN.Ecommerce.Entities.Category;
 import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Services.CategoryService;
@@ -11,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Pattern;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @RestController

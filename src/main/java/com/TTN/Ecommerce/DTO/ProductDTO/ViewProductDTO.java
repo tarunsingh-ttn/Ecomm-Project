@@ -15,6 +15,8 @@ public class ViewProductDTO {
     private String name;
     private String description;
     private String brand;
-    private boolean isActive;
+    private Boolean isActive;
+    private Boolean isCancellable;
+    private Boolean isReturnable;
     private Category category;
 }

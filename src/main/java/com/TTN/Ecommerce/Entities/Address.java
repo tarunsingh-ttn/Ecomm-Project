@@ -5,6 +5,8 @@ import com.TTN.Ecommerce.utils.Auditable;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -24,12 +26,10 @@ public class Address extends Auditable<String> {
     private String addressLine;
     private String  zipCode;
     private String label;
-
     @OneToOne
     @JoinColumn(name="seller_id")
     @JsonBackReference("seller-address")
     private Seller seller;
-
     @ManyToOne
     @JoinColumn(name="cust_id")
     @JsonBackReference("customer-address")

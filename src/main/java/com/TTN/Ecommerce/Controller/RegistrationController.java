@@ -1,11 +1,9 @@
 package com.TTN.Ecommerce.Controller;
 
-import com.TTN.Ecommerce.DTO.CustomerDTO;
-import com.TTN.Ecommerce.DTO.SellerDTO;
+import com.TTN.Ecommerce.DTO.CustomerDTO.CustomerDTO;
+import com.TTN.Ecommerce.DTO.Seller.SellerDTO;
 import com.TTN.Ecommerce.Entities.Customer;
 import com.TTN.Ecommerce.Entities.Seller;
-import com.TTN.Ecommerce.Entities.User;
-import com.TTN.Ecommerce.Entities.VerificationToken;
 import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Repositories.UserRepository;
 import com.TTN.Ecommerce.Repositories.VerificationTokenRepository;
@@ -18,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")

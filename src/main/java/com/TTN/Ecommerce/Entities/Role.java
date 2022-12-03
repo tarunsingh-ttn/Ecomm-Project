@@ -33,9 +33,7 @@ public class Role {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_gen")
 	@SequenceGenerator(name="role_gen", sequenceName = "role_seq", initialValue = 1, allocationSize = 1)
 	private int role_id;
-
 	private String authority;
-
 	@Override
 	public String toString() {
 		return "Role{" +

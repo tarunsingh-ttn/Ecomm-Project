@@ -1,7 +1,7 @@
 package com.TTN.Ecommerce.Controller;
-import com.TTN.Ecommerce.DTO.CustomerUpdateProfile;
-import com.TTN.Ecommerce.DTO.CustomerViewProfile;
-import com.TTN.Ecommerce.DTO.UpdateAddressDTO;
+import com.TTN.Ecommerce.DTO.CustomerDTO.CustomerUpdateProfile;
+import com.TTN.Ecommerce.DTO.CustomerDTO.CustomerViewProfile;
+import com.TTN.Ecommerce.DTO.Address.UpdateAddressDTO;
 import com.TTN.Ecommerce.Entities.Address;
 import com.TTN.Ecommerce.Exception.EcommerceException;
 import com.TTN.Ecommerce.Services.CustomerService;
