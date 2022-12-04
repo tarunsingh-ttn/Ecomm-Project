@@ -32,7 +32,6 @@ public class Product extends Auditable<String> {
     private String brand;
     private boolean isActive;
     private boolean isDeleted;
-
     @JoinColumn(name = "sellerId")
     @ManyToOne
     @JsonIgnore
@@ -40,7 +39,6 @@ public class Product extends Auditable<String> {
     @JoinColumn(name="catId")
     @OneToOne
     private Category category;
-
     @Override
     public String toString() {
         return "Product{" +

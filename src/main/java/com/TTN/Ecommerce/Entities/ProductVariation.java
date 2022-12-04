@@ -22,21 +22,17 @@ public class ProductVariation {
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "variation_gen")
     @SequenceGenerator(name="product_gen", sequenceName = "product_seq", initialValue = 1, allocationSize = 1)
     private long id;
-
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-
     private int quantity;
-
     private float price;
-
-//    @Type( type = "json" )
+    //    @Type( type = "json" )
 //    @Column( columnDefinition = "json" )
 //    private String metadata;
     @Column(columnDefinition = "TEXT")
     @Convert(converter= JSONObjectConverter.class)
     private JSONObject jsonData;
     private String imageName;
-    private boolean isAvailable;
+    private Boolean isActive;
 }

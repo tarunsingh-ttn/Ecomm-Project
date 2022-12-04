@@ -24,7 +24,6 @@ public class ProductController {
         String message=productService.createProduct(authentication.getName(),createProductDTO);
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
-
     @GetMapping("/api/seller/product/view")
     public ResponseEntity<ViewProductDTO> viewProduct(Authentication authentication, @RequestParam Long prodId) throws EcommerceException {
         ViewProductDTO product=productService.viewProduct(authentication.getName(),prodId);
@@ -35,7 +34,6 @@ public class ProductController {
         List<ViewProductDTO> productList=productService.displayAllProducts(authentication.getName());
         return new ResponseEntity<>(productList,HttpStatus.OK);
     }
-
     @DeleteMapping("api/seller/product/delete")
     public ResponseEntity<String> deleteProduct(Authentication authentication,@RequestParam Long prodId)throws EcommerceException{
         String message=productService.removeProduct(authentication.getName(),prodId);
@@ -81,6 +79,15 @@ public class ProductController {
         return new ResponseEntity<>(productService.getVariation(authentication.getName(),varId),HttpStatus.OK);
     }
 
+    @GetMapping("api/seller/variant/view/all")
+    public ResponseEntity<List<ViewVariation>> viewAllVariation(@RequestParam Long prodId, Authentication authentication) throws EcommerceException {
+        return new ResponseEntity<>(productService.viewAllPartitions(prodId,authentication.getName()),HttpStatus.OK);
+    }
+
+    @PutMapping("api/seller/variant/update")
+    public ResponseEntity<String> updateVariation(@RequestParam Long varId,Authentication authentication,@RequestBody UpdateVariation newVariation){
+        return new ResponseEntity<>(productService.updateVaraition(varId,authentication,newVariation),HttpStatus.OK);
+    }
 
 
 }
