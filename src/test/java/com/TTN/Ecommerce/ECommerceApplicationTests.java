@@ -1,21 +1,22 @@
 package com.TTN.Ecommerce;
 
-import com.TTN.Ecommerce.Entities.*;
+import com.TTN.Ecommerce.entity.*;
 
-import com.TTN.Ecommerce.Repositories.*;
+import com.TTN.Ecommerce.repositories.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
-class ECommerceApplicationTests {
+class 	ECommerceApplicationTests {
 
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+	private CategoryRepository categoryRepository;
 
 	@Autowired
 	CustomerRepository customerRepository;
@@ -32,7 +33,7 @@ class ECommerceApplicationTests {
 	void contextLoads() {
 	}
 
-
+/*
     @Test
 	void createTest(){
 
@@ -97,9 +98,9 @@ class ECommerceApplicationTests {
 
 
 
-	}
+	}*/
 
-	@Test
+/*	@Test
 	void createSellerTest(){
 
 		Seller newSeller=new Seller();
@@ -133,13 +134,45 @@ class ECommerceApplicationTests {
 
 
 
-	}
+	}*/
 
-	@Test
-	void createSellerAddress(){
-
-
-	}
+//	@Test
+//	void createCategory(){
+//		Category electronics = new Category("electronics");
+//
+//		Category mobilePhones = new Category("mobilephones",electronics);
+//
+//		Category washingMachines = new Category("washingName",electronics);
+//
+//		List<Category> cat=new ArrayList<>();
+//		cat.add(mobilePhones);
+//		cat.add(washingMachines);
+//
+//		Category gaming=new Category("gaming",electronics);
+//		cat.add(gaming);
+//		electronics.setSubCategory(cat);
+//		categoryRepository.save(electronics);
+//		categoryRepository.save(gaming);
+//
+//
+//		Category playStation=new Category("playStation",gaming);
+//		categoryRepository.save(playStation);
+//		Category ps4=new Category("ps4",playStation);
+//		Category ps5=new Category("ps5",playStation);
+//		categoryRepository.save(ps4);
+//		categoryRepository.save(ps5);
+//		List<Category> gam=new ArrayList<>();
+//		gam.add(ps4);
+//		gam.add(ps5);
+//		gaming.setSubCategory(gam);
+//
+//
+//		categoryRepository.save(playStation);
+//
+//
+//
+//
+//	}
 
 
 }

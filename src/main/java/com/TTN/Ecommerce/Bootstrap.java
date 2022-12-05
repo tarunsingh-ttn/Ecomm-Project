@@ -1,9 +1,9 @@
 package com.TTN.Ecommerce;
 
-import com.TTN.Ecommerce.Entities.Role;
-import com.TTN.Ecommerce.Entities.User;
-import com.TTN.Ecommerce.Repositories.RoleRepository;
-import com.TTN.Ecommerce.Repositories.UserRepository;
+import com.TTN.Ecommerce.entity.Role;
+import com.TTN.Ecommerce.entity.User;
+import com.TTN.Ecommerce.repositories.RoleRepository;
+import com.TTN.Ecommerce.repositories.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +16,16 @@ import org.springframework.stereotype.Component;
 public class Bootstrap implements ApplicationRunner {
 
     protected final Log logger = LogFactory.getLog(getClass());
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        System.out.println("bootstrap this");
+
         logger.info("BootstrapCommandLineRunner's run method started.");
 
         if(roleRepository.count()<1){
@@ -54,11 +51,13 @@ public class Bootstrap implements ApplicationRunner {
             User user = new User();
             user.setFirstName("Super");
             user.setLastName("User");
-            user.setEmail("admin");
-            user.setPassword(passwordEncoder.encode("admin"));
+            user.setEmail("admin@gmail.com");
+            user.setPassword(passwordEncoder.encode("Admin001"));
+            user.setIS_ACTIVE(true);
             Role role = roleRepository.findById(1).get();
             user.setRole(role);
             userRepository.save(user);
+            logger.info("Admin user created");
         }
 
     }

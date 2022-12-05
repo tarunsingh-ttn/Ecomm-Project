@@ -1,0 +1,13 @@
+package com.TTN.Ecommerce.repositories;
+
+import com.TTN.Ecommerce.entity.Image;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ImageRepository extends JpaRepository<Image,Long>{
+
+
+    Image findByName(String name);
+
+}
