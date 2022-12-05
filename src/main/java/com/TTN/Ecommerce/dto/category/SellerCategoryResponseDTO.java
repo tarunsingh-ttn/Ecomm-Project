@@ -1,4 +1,4 @@
-package com.TTN.Ecommerce.dto.Category;
+package com.TTN.Ecommerce.dto.category;
 
 import com.TTN.Ecommerce.dto.MetadataResponseDTO;
 import com.TTN.Ecommerce.entity.Category;

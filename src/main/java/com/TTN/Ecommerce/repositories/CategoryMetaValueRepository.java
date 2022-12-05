@@ -1,8 +1,8 @@
-package com.TTN.Ecommerce.Repositories;
+package com.TTN.Ecommerce.repositories;
 
-import com.TTN.Ecommerce.Entities.Category;
-import com.TTN.Ecommerce.Entities.CategoryMetaValue;
-import com.TTN.Ecommerce.Entities.CategoryMetadataFieldKey;
+import com.TTN.Ecommerce.entity.Category;
+import com.TTN.Ecommerce.entity.CategoryMetaValue;
+import com.TTN.Ecommerce.entity.CategoryMetadataFieldKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

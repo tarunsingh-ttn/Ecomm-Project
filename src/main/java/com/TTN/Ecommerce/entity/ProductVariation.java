@@ -1,4 +1,5 @@
-package com.TTN.Ecommerce.Entities;
+package com.TTN.Ecommerce.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class ProductVariation {
     private long id;
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product;
     private int quantity;
     private float price;

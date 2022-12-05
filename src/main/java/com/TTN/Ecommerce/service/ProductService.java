@@ -1,10 +1,11 @@
-package com.TTN.Ecommerce.Services;
+package com.TTN.Ecommerce.service;
 
-import com.TTN.Ecommerce.dto.ProductDTO.*;
+import com.TTN.Ecommerce.dto.product.*;
 import com.TTN.Ecommerce.entity.*;
 import com.TTN.Ecommerce.exception.EcommerceException;
 import com.TTN.Ecommerce.repositories.*;
 import com.TTN.Ecommerce.utils.FilterDto;
+import com.TTN.Ecommerce.utils.JsonConvertor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.BeanUtils;
@@ -16,13 +17,17 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
 public class ProductService {
     @Autowired
     CategoryMetaValueRepository metaValueRepository;
+    @Autowired
+    ImageService imageService;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -123,8 +128,8 @@ public class ProductService {
         if (newProduct.equals(updatedProduct)) {
             return "Nothing to update";
         }
-        if(newProduct!=null){
-            if (productRepository.findExistingProduct(newProduct.getName(), seller.getSeller_id(), product.getBrand(),product.getCategory().getCatId()).isPresent()) {
+        if (newProduct != null) {
+            if (productRepository.findExistingProduct(newProduct.getName(), seller.getSeller_id(), product.getBrand(), product.getCategory().getCatId()).isPresent()) {
                 throw new EcommerceException("Product.product.Invalid", HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
@@ -173,7 +178,7 @@ public class ProductService {
         return viewProductDTO;
     }
 
-    public String addVariation(CreateVariation variationData) throws EcommerceException, JSONException {
+    public String addVariation(CreateVariation variationData, MultipartFile primaryImage,MultipartFile[] secondaryImages) throws EcommerceException, JSONException {
         ProductVariation variation = new ProductVariation();
         Product product = productRepository.findById(variationData.getProdId()).orElseThrow(() -> new EcommerceException("PRODUCT_NOT_FOUND", HttpStatus.NOT_FOUND));
 //        if(!product.isActive()){
@@ -208,7 +213,12 @@ public class ProductService {
         variation.setJsonData(metadata);
         variation.setQuantity(variationData.getQuantity());
         variation.setIsActive(false);
-        variationRepository.save(variation);
+       Long varId= variationRepository.save(variation).getId();
+        imageService.storeProductImages(product.getProdId(),primaryImage);
+        if(secondaryImages.length!=0){
+            imageService.storeVariationImages(varId,5L,secondaryImages);
+        }
+
         return "Success";
     }
 
@@ -245,6 +255,12 @@ public class ProductService {
             }
             map.put(key, value);
         }
+        try {
+            variationResponse.setPrimaryImage(imageService.showPrimaryImage(product.getProdId()));
+            variationResponse.setSecondaryImages(imageService.showSecondaryImages(product.getProdId(),varId));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         variationResponse.setMetadata(map);
 
         return variationResponse;
@@ -255,29 +271,29 @@ public class ProductService {
         List<ProductVariation> variations = variationRepository.findByProduct(product);
         List<ViewVariation> allVariations = new ArrayList<>();
         variations.forEach((variation) -> {
-            ViewVariation viewVariation = new ViewVariation();
+                    ViewVariation viewVariation = new ViewVariation();
 
-            //setiign metadata
-            Map<String, String> map = new HashMap<>();
-            JSONObject jsonObject = variation.getJsonData();//getString
-            Iterator<String> keysItr = jsonObject.keys();
-            viewVariation.setVarId(variation.getId());
-            while (keysItr.hasNext()) {
-                String key = keysItr.next();
-                String value = "";
-                try {
-                    value = value + jsonObject.get(key);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-                map.put(key, value);
-            }
-            viewVariation.setMetadata(map);
-            viewVariation.setProduct(variation.getProduct());
-            viewVariation.setPrice(variation.getPrice());
-            viewVariation.setQuantity(variation.getQuantity());
-            viewVariation.setVarId(variation.getId());
-            allVariations.add(viewVariation);
+                    //setiign metadata
+                    Map<String, String> map = new HashMap<>();
+                    JSONObject jsonObject = variation.getJsonData();//getString
+                    Iterator<String> keysItr = jsonObject.keys();
+                    viewVariation.setVarId(variation.getId());
+                    while (keysItr.hasNext()) {
+                        String key = keysItr.next();
+                        String value = "";
+                        try {
+                            value = value + jsonObject.get(key);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        map.put(key, value);
+                    }
+                    viewVariation.setMetadata(map);
+                    viewVariation.setProduct(variation.getProduct());
+                    viewVariation.setPrice(variation.getPrice());
+                    viewVariation.setQuantity(variation.getQuantity());
+                    viewVariation.setVarId(variation.getId());
+                    allVariations.add(viewVariation);
                 }
 
         );
@@ -286,23 +302,83 @@ public class ProductService {
     }
 
     public String updateVaraition(Long varId, Authentication authentication, UpdateVariation newVariation) {
-        ProductVariation productVariation=variationRepository.findById(varId).orElseThrow();
-        JSONObject newMetadata=new JSONObject();
-        newVariation.getMetadata().forEach((key,value)->{
+        ProductVariation productVariation = variationRepository.findById(varId).orElseThrow();
+        JSONObject newMetadata = new JSONObject();
+        newVariation.getMetadata().forEach((key, value) -> {
             try {
-                newMetadata.put(key,value);
+                newMetadata.put(key, value);
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
         });
-        BeanUtils.copyProperties(newVariation,productVariation,FilterDto.getNullPropertyNames(productVariation));
+        BeanUtils.copyProperties(newVariation, productVariation, FilterDto.getNullPropertyNames(productVariation));
         productVariation.setJsonData(newMetadata);
         variationRepository.save(productVariation);
         return "update success";
     }
 
-    public CustomerViewProduct viewProductAsCustomer(Long prodId) {
-        CustomerViewProduct customerProduct=new CustomerViewProduct();
+    public CustomerViewProduct viewProductAsCustomer(Long prodId) throws EcommerceException {
+        CustomerViewProduct customerProduct = new CustomerViewProduct();
+        Product product = productRepository.findById(prodId).orElseThrow(() -> new EcommerceException("PRODUCT_NOT_FOUND", HttpStatus.NOT_FOUND));
+       /* if(product.isDeleted() || !product.isActive()){
+            throw new EcommerceException("PRODUCT_NOT_FOUND",HttpStatus.OK);
+        }
+        List<ProductVariation> productVariations = variationRepository.findByProduct(product);
+        if(productVariations.isEmpty()){
+            throw new EcommerceException("PRODUCT_NOT_FOUND",HttpStatus.OK);
+        }*/
+        customerProduct.setBrand(product.getBrand());
+        customerProduct.setDescription(product.getDescription());
+        customerProduct.setName(product.getName());
+        customerProduct.setIsActive(product.isActive());
+        customerProduct.setIsCancellable(product.isCancellable());
+        customerProduct.setProdId(product.getProdId());
+        customerProduct.setCategory(product.getCategory());
+        List<CustomerViewVariation> variationList = new ArrayList<>();
+        variationRepository.findByProduct(product).forEach((productVariation) -> {
+            CustomerViewVariation variation = new CustomerViewVariation();
+            variation.setPrice(productVariation.getPrice());
+            variation.setVarId(productVariation.getId());
+            variation.setMetadata(JsonConvertor.JSONtoMap(productVariation.getJsonData()));
+            variationList.add(variation);
+        });
+        customerProduct.setVariations(variationList);
+
         return customerProduct;
+    }
+
+    public List<CustomerViewProduct> viewAllProductAsCustomer(Long catId) throws EcommerceException {
+        List<CustomerViewProduct> productList = new ArrayList<>();
+        Category category = categoryRepository.findById(catId).orElseThrow(() -> new EcommerceException("CATEGORY_NOT_FOUND", HttpStatus.BAD_REQUEST));
+        if (!category.getChildren().isEmpty()) {
+            throw new EcommerceException("CATEGORY_NOT_VALID", HttpStatus.BAD_REQUEST);
+        }
+        List<Product> products = productRepository.findByCategory(category);
+        if (products.isEmpty()) {
+            throw new EcommerceException("NO_PRODUCTS_FOUND", HttpStatus.NOT_FOUND);
+        }
+        for (Product product : products) {
+            CustomerViewProduct customerViewProduct = new CustomerViewProduct();
+            customerViewProduct.setProdId(product.getProdId());
+            customerViewProduct.setName(product.getName());
+            customerViewProduct.setBrand(product.getBrand());
+            customerViewProduct.setDescription(product.getDescription());
+            customerViewProduct.setIsActive(product.isActive());
+            customerViewProduct.setIsCancellable(product.isCancellable());
+            customerViewProduct.setIsReturnable(product.isReturnable());
+            customerViewProduct.setCategory(product.getCategory());
+            List<CustomerViewVariation> variationList = new ArrayList<>();
+            variationRepository.findByProduct(product).forEach((productVariation) -> {
+                CustomerViewVariation variation = new CustomerViewVariation();
+                variation.setPrice(productVariation.getPrice());
+                variation.setVarId(productVariation.getId());
+                variation.setMetadata(JsonConvertor.JSONtoMap(productVariation.getJsonData()));
+                variationList.add(variation);
+            });
+            customerViewProduct.setVariations(variationList);
+            productList.add(customerViewProduct);
+        }
+
+        return productList;
     }
 }

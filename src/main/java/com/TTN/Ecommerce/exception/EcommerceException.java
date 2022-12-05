@@ -1,7 +1,6 @@
-package com.TTN.Ecommerce.Exception;
+package com.TTN.Ecommerce.exception;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Data

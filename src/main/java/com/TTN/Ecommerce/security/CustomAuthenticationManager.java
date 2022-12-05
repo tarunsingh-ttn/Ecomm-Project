@@ -1,9 +1,8 @@
-package com.TTN.Ecommerce.config;
+package com.TTN.Ecommerce.security;
 
-import com.TTN.Ecommerce.Entities.User;
-import com.TTN.Ecommerce.Exception.EcommerceException;
-import com.TTN.Ecommerce.Repositories.UserRepository;
-import com.TTN.Ecommerce.Services.EmailSenderService;
+import com.TTN.Ecommerce.entity.User;
+import com.TTN.Ecommerce.repositories.UserRepository;
+import com.TTN.Ecommerce.service.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;

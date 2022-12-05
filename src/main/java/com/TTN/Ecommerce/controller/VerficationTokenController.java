@@ -1,13 +1,10 @@
-package com.TTN.Ecommerce.Controller;
+package com.TTN.Ecommerce.controller;
 
 
-import com.TTN.Ecommerce.DTO.EmailDTO;
-import com.TTN.Ecommerce.Entities.User;
-import com.TTN.Ecommerce.Entities.VerificationToken;
-import com.TTN.Ecommerce.Exception.EcommerceException;
-import com.TTN.Ecommerce.Repositories.UserRepository;
-import com.TTN.Ecommerce.Repositories.VerificationTokenRepository;
-import com.TTN.Ecommerce.Services.VerificationTokenService;
+import com.TTN.Ecommerce.dto.EmailDTO;
+import com.TTN.Ecommerce.exception.EcommerceException;
+import com.TTN.Ecommerce.repositories.UserRepository;
+import com.TTN.Ecommerce.service.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

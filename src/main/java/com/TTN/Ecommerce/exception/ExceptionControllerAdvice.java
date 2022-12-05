@@ -1,4 +1,4 @@
-package com.TTN.Ecommerce.Exception;
+package com.TTN.Ecommerce.exception;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -22,11 +23,9 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>(environment.getProperty(exception.getMessage()),exception.getStatus() );
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> exceptionHandler(MethodArgumentNotValidException exception) {
-        String errorMsg = exception.getBindingResult().getAllErrors().stream().map(x -> x.getDefaultMessage())
-                .collect(Collectors.joining(", "));
-
-
+    public ResponseEntity<List<String>> exceptionHandler(MethodArgumentNotValidException exception) {
+        List<String> errorMsg = exception.getBindingResult().getAllErrors().stream().map(x -> x.getDefaultMessage())
+                .collect(Collectors.toList());
         return new ResponseEntity<>(errorMsg, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(UsernameNotFoundException.class)

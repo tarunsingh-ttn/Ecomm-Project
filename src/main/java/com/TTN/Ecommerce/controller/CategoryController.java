@@ -1,13 +1,13 @@
-package com.TTN.Ecommerce.Controller;
+package com.TTN.Ecommerce.controller;
 
-import com.TTN.Ecommerce.DTO.*;
-import com.TTN.Ecommerce.DTO.Category.CategoryUpdateDTO;
-import com.TTN.Ecommerce.DTO.Category.CreateCategory;
-import com.TTN.Ecommerce.DTO.Category.SellerCategoryResponseDTO;
-import com.TTN.Ecommerce.DTO.Category.ViewCategory;
-import com.TTN.Ecommerce.Entities.Category;
-import com.TTN.Ecommerce.Exception.EcommerceException;
-import com.TTN.Ecommerce.Services.CategoryService;
+import com.TTN.Ecommerce.dto.*;
+import com.TTN.Ecommerce.dto.category.CategoryUpdateDTO;
+import com.TTN.Ecommerce.dto.category.CreateCategory;
+import com.TTN.Ecommerce.dto.category.SellerCategoryResponseDTO;
+import com.TTN.Ecommerce.dto.category.ViewCategory;
+import com.TTN.Ecommerce.entity.Category;
+import com.TTN.Ecommerce.exception.EcommerceException;
+import com.TTN.Ecommerce.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

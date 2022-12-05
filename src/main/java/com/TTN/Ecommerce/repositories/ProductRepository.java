@@ -1,8 +1,8 @@
-package com.TTN.Ecommerce.Repositories;
+package com.TTN.Ecommerce.repositories;
 
-import com.TTN.Ecommerce.Entities.Category;
-import com.TTN.Ecommerce.Entities.Product;
-import com.TTN.Ecommerce.Entities.Seller;
+import com.TTN.Ecommerce.entity.Category;
+import com.TTN.Ecommerce.entity.Product;
+import com.TTN.Ecommerce.entity.Seller;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,4 +15,6 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     Optional<Product> findExistingProduct(String name, Long sellerId, String brand,Long catId);
 
     List<Product> findBySeller(Seller seller);
+
+    List<Product> findByCategory(Category category);
 }

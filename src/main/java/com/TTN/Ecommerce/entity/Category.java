@@ -1,4 +1,4 @@
-package com.TTN.Ecommerce.Entities;
+package com.TTN.Ecommerce.entity;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
@@ -34,4 +34,6 @@ public class Category {
         }
         return allChildren;
     }
+
+
 }

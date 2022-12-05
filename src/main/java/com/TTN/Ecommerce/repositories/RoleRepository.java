@@ -1,6 +1,6 @@
-package com.TTN.Ecommerce.Repositories;
+package com.TTN.Ecommerce.repositories;
 
-import com.TTN.Ecommerce.Entities.Role;
+import com.TTN.Ecommerce.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

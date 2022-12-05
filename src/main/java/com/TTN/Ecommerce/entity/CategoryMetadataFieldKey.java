@@ -1,4 +1,4 @@
-package com.TTN.Ecommerce.Entities;
+package com.TTN.Ecommerce.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Entity;
 import java.io.Serializable;
 
 

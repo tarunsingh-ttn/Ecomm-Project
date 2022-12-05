@@ -1,4 +1,4 @@
-package com.TTN.Ecommerce.Entities;
+package com.TTN.Ecommerce.entity;
 
 
 import com.TTN.Ecommerce.utils.Auditable;

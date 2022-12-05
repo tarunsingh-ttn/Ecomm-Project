@@ -1,9 +1,9 @@
-package com.TTN.Ecommerce.Controller;
+package com.TTN.Ecommerce.controller;
 
-import com.TTN.Ecommerce.DTO.CreateMetaData;
-import com.TTN.Ecommerce.Entities.CategoryMetadata;
-import com.TTN.Ecommerce.Exception.EcommerceException;
-import com.TTN.Ecommerce.Services.MetaDataService;
+import com.TTN.Ecommerce.dto.CreateMetaData;
+import com.TTN.Ecommerce.entity.CategoryMetadata;
+import com.TTN.Ecommerce.exception.EcommerceException;
+import com.TTN.Ecommerce.service.MetaDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

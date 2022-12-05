@@ -1,9 +1,9 @@
 package com.TTN.Ecommerce;
 
-import com.TTN.Ecommerce.Entities.Role;
-import com.TTN.Ecommerce.Entities.User;
-import com.TTN.Ecommerce.Repositories.RoleRepository;
-import com.TTN.Ecommerce.Repositories.UserRepository;
+import com.TTN.Ecommerce.entity.Role;
+import com.TTN.Ecommerce.entity.User;
+import com.TTN.Ecommerce.repositories.RoleRepository;
+import com.TTN.Ecommerce.repositories.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

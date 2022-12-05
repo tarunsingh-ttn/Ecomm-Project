@@ -1,7 +1,7 @@
-package com.TTN.Ecommerce.Controller;
+package com.TTN.Ecommerce.controller;
 
-import com.TTN.Ecommerce.Services.ImageService;
-import com.TTN.Ecommerce.Services.UserService;
+import com.TTN.Ecommerce.service.ImageService;
+import com.TTN.Ecommerce.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.Multipart;
 import java.io.IOException;
 
 @RestController

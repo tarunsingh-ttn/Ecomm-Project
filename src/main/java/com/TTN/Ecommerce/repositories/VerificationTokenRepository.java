@@ -1,7 +1,7 @@
-package com.TTN.Ecommerce.Repositories;
+package com.TTN.Ecommerce.repositories;
 
-import com.TTN.Ecommerce.Entities.User;
-import com.TTN.Ecommerce.Entities.VerificationToken;
+import com.TTN.Ecommerce.entity.User;
+import com.TTN.Ecommerce.entity.VerificationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface VerificationTokenRepository extends JpaRepository<VerificationToken,Integer> {

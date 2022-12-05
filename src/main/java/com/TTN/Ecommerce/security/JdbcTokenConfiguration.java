@@ -1,5 +1,5 @@
 
-package com.TTN.Ecommerce.config;
+package com.TTN.Ecommerce.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

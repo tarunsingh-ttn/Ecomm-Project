@@ -1,10 +1,11 @@
-package com.TTN.Ecommerce.dto.ProductDTO;
+package com.TTN.Ecommerce.dto.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Map;
 
 @Getter

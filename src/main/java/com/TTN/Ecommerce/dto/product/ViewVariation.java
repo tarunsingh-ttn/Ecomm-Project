@@ -1,10 +1,11 @@
-package com.TTN.Ecommerce.dto.ProductDTO;
+package com.TTN.Ecommerce.dto.product;
 
 import com.TTN.Ecommerce.entity.Product;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -16,4 +17,7 @@ public class ViewVariation {
     private Float price;
     private Integer quantity;
     private Product product;
+    //
+    private byte[] primaryImage;
+    private List<byte[]> secondaryImages;
 }

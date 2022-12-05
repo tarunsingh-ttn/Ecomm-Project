@@ -1,10 +1,12 @@
-package com.TTN.Ecommerce.dto.ProductDTO;
+package com.TTN.Ecommerce.dto.product;
 
 import com.TTN.Ecommerce.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,4 +21,5 @@ public class ViewProductDTO {
     private Boolean isCancellable;
     private Boolean isReturnable;
     private Category category;
+
 }

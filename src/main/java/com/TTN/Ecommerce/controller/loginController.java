@@ -1,24 +1,19 @@
-package com.TTN.Ecommerce.Controller;
+package com.TTN.Ecommerce.controller;
 
 
-import com.TTN.Ecommerce.DTO.LoginRequest;
-import com.TTN.Ecommerce.Entities.User;
-import com.TTN.Ecommerce.Exception.EcommerceException;
-import com.TTN.Ecommerce.Repositories.UserRepository;
-import com.TTN.Ecommerce.Services.LogoutService;
+import com.TTN.Ecommerce.dto.LoginRequest;
+import com.TTN.Ecommerce.exception.EcommerceException;
+import com.TTN.Ecommerce.repositories.UserRepository;
+import com.TTN.Ecommerce.service.LogoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 public class loginController {

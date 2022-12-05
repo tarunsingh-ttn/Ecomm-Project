@@ -1,7 +1,7 @@
-package com.TTN.Ecommerce.Services;
+package com.TTN.Ecommerce.service;
 
 import com.TTN.Ecommerce.dto.*;
-import com.TTN.Ecommerce.dto.Category.*;
+import com.TTN.Ecommerce.dto.category.*;
 import com.TTN.Ecommerce.entity.Category;
 import com.TTN.Ecommerce.entity.CategoryMetaValue;
 import com.TTN.Ecommerce.entity.CategoryMetadata;
@@ -11,6 +11,7 @@ import com.TTN.Ecommerce.repositories.CategoryMetaDataRepository;
 import com.TTN.Ecommerce.repositories.CategoryMetaValueRepository;
 import com.TTN.Ecommerce.repositories.CategoryRepository;
 import com.TTN.Ecommerce.utils.FilterDto;
+import org.hibernate.annotations.Parent;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,16 +32,18 @@ public class CategoryService {
     private CategoryMetaValueRepository categoryMetaValueRepository;
 
     public String addCategory(CreateCategory category) throws EcommerceException {
-
+        // start
         Category newCategory = new Category();
-
-//        List<String> result=newCategory.getAllChildren(categoryRepository.findById(19L).get(),List.of("hello"));
-//        if(categoryRepository.findByName(category.getName()).isPresent()){
-//            return "category exist";
-//        }
-//        if(result.contains(category.getName())){
-//            return "category exist";
-//        }
+        Category category1=categoryRepository.findById(category.getParentId()).orElseThrow(()->new EcommerceException());
+        while(category1.getParent().getParent()!=null){
+             category1=category1.getParent();
+        }
+        List<String> result=newCategory.getAllChildren(category1,List.of());
+        result.add(categoryRepository.findRootNode().getName());
+        if(result.contains(category.getName())){
+            return "category exist";
+        }
+        //end
         newCategory.setName(category.getName());
         if (category.getParentId() != null) {
             Category parentCategory = categoryRepository.findById(category.getParentId())
@@ -217,5 +220,10 @@ public class CategoryService {
             return rootNodes;
         }
     }
+
+//    public FilterCategoryDto filterCategories(Long catId) throws EcommerceException {
+//        Category category=categoryRepository.findById(catId).orElseThrow(()->new EcommerceException("CATEGORY_NOT_FOUND",HttpStatus.NOT_FOUND));
+//
+//    }
 
 }

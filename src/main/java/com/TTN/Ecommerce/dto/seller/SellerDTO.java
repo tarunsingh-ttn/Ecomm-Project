@@ -1,6 +1,6 @@
-package com.TTN.Ecommerce.dto.Seller;
+package com.TTN.Ecommerce.dto.seller;
 
-import com.TTN.Ecommerce.dto.Address.AddressDTO;
+import com.TTN.Ecommerce.dto.address.AddressDTO;
 import com.TTN.Ecommerce.dto.UserDTO;
 import lombok.Data;
 

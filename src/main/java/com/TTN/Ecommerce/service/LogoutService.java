@@ -1,4 +1,4 @@
-package com.TTN.Ecommerce.Services;
+package com.TTN.Ecommerce.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

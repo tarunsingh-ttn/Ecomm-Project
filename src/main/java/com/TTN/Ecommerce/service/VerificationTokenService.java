@@ -1,4 +1,4 @@
-package com.TTN.Ecommerce.Services;
+package com.TTN.Ecommerce.service;
 
 import com.TTN.Ecommerce.entity.User;
 import com.TTN.Ecommerce.entity.VerificationToken;

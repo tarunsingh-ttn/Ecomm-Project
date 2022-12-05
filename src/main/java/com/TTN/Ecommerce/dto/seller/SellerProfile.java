@@ -1,4 +1,4 @@
-package com.TTN.Ecommerce.dto.Seller;
+package com.TTN.Ecommerce.dto.seller;
 
 
 

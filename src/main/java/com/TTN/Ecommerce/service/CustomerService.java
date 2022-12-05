@@ -1,11 +1,11 @@
-package com.TTN.Ecommerce.Services;
+package com.TTN.Ecommerce.service;
 
-import com.TTN.Ecommerce.dto.Address.AddressDTO;
-import com.TTN.Ecommerce.dto.Address.UpdateAddressDTO;
-import com.TTN.Ecommerce.dto.CustomerDTO.CustomerDTO;
-import com.TTN.Ecommerce.dto.CustomerDTO.CustomerResponse;
-import com.TTN.Ecommerce.dto.CustomerDTO.CustomerUpdateProfile;
-import com.TTN.Ecommerce.dto.CustomerDTO.CustomerViewProfile;
+import com.TTN.Ecommerce.dto.address.AddressDTO;
+import com.TTN.Ecommerce.dto.address.UpdateAddressDTO;
+import com.TTN.Ecommerce.dto.customer.CustomerDTO;
+import com.TTN.Ecommerce.dto.customer.CustomerResponse;
+import com.TTN.Ecommerce.dto.customer.CustomerUpdateProfile;
+import com.TTN.Ecommerce.dto.customer.CustomerViewProfile;
 import com.TTN.Ecommerce.entity.*;
 import com.TTN.Ecommerce.exception.EcommerceException;
 import com.TTN.Ecommerce.repositories.AddressRepository;
@@ -16,10 +16,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,7 +34,6 @@ import java.util.Set;
 public class CustomerService {
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private ImageService imageService;
     @Autowired
@@ -67,7 +70,6 @@ public class CustomerService {
         return customerResponsesList;
     }
     public Customer createCustomer(CustomerDTO customerDTO) throws EcommerceException {
-
         if( userRepository.findByEmail(customerDTO.getEmail()) !=null) {
             throw new EcommerceException("Service.CUSTOMER_ALREADY_EXISTS",HttpStatus.CONFLICT);
         }
@@ -77,11 +79,8 @@ public class CustomerService {
         user.setPassword(passwordEncoder.encode(customerDTO.getPassword()));
         user.setMiddleName(customerDTO.getMiddleName());
         user.setEmail(customerDTO.getEmail());
-
-
         Role role = roleRepository.findRoleByAuthority("CUSTOMER");
         user.setRole(role);
-
         Customer customer = new Customer();
         customer.setContact(customerDTO.getContact());
         customer.setUser(user);

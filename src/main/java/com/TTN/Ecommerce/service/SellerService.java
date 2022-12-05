@@ -1,9 +1,9 @@
-package com.TTN.Ecommerce.Services;
+package com.TTN.Ecommerce.service;
 
 
-import com.TTN.Ecommerce.dto.Seller.SellerDTO;
-import com.TTN.Ecommerce.dto.Seller.SellerProfile;
-import com.TTN.Ecommerce.dto.Seller.SellerResponse;
+import com.TTN.Ecommerce.dto.seller.SellerDTO;
+import com.TTN.Ecommerce.dto.seller.SellerProfile;
+import com.TTN.Ecommerce.dto.seller.SellerResponse;
 import com.TTN.Ecommerce.entity.Address;
 import com.TTN.Ecommerce.entity.Role;
 import com.TTN.Ecommerce.entity.Seller;
